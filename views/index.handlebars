@@ -4,7 +4,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Home Page</title>
+		<title>Game Reviews</title>
 		<meta name="description" content="form to add new books">
 		<meta name="author" content="Mark Tyers">
 		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
 	</head>
 	<body>
 		<header>
-			<h1>Home</h1>
+			<h1>Game Reviews</h1>
 			{{#if authorised}}
 				<a href="/logout">Log out</a>
 			{{else}}
@@ -25,10 +25,17 @@
 			</aside>
 		{{/if}}
 	<main>
-		<p>This is the home page. Users can see it without logging in.</p>
-		{{#if authorised}}
-			<p><a href="/secure">secure page</a></p>
-		{{/if}}
+		<table>
+			<tr><th>Game Cover</th><th>Game</th><th>Publisher</th><th>Release Year</th></tr>
+			{{#each records}}
+			<tr>
+				<td><img src="{{this.thumbnail}}" alt="Game Cover"></td>
+				<td>{{this.game}}</td>
+				<td>{{this.publisher}}</td>
+				<td>{{this.release_year}}</td>
+			</tr>
+			{{/each}}
+		</table>
 	</main>
 	</body>
 </html>

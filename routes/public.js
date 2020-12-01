@@ -6,6 +6,8 @@ const router = new Router()
 router.use(bodyParser({multipart: true}))
 
 import Accounts from '../modules/accounts.js'
+// reviews table is imported to be used for the home page without log in
+import Reviews from '../modules/reviews.js'
 const dbName = 'website.db'
 
 /**
@@ -15,9 +17,19 @@ const dbName = 'website.db'
  * @route {GET} /
  */
 router.get('/', async ctx => {
+	// created reviews object
+	const reviews = await new Reviews(dbName)
 	try {
+		// calls the records of reviews 
+		const records = await reviews.all()
+		// prints of the records in the terminal
+		console.log(records)
+		// records property added
+		ctx.hbs.records = records
+		// object is passed onto the index page template
 		await ctx.render('index', ctx.hbs)
 	} catch(err) {
+		ctx.hbs.error = err.message
 		await ctx.render('error', ctx.hbs)
 	}
 })

@@ -29,6 +29,10 @@ class Reviews {
 		const sql = 'SELECT users.user, reviews.*FROM reviews, users\
 									WHERE reviews.userid = users.id;'
 		const reviews = await this.db.all(sql)
+		// checks if a thumbnail is not avaiable, a placeholder thumbnail will be used
+		for(const i in reviews) {
+			if(reviews[i].thumbnail === null) reviews[i].thumbnail = 'https://upload.wikimedia.org/wikipedia/en/6/60/No_Picture.jpg'
+		}
 		return reviews
 	}
 }

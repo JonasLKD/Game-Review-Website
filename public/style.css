@@ -71,9 +71,18 @@ p, legend {
 }
 
 main {
+	max-width: 800px;
+	margin: auto;
+	margin-top: 2em;
+	padding: 2em;
+	box-sizing: border-box;
+	background-color: lightgray;
+}
+
+/* sizes the pictures to same width*/
+img {
 	width: 100%;
-	margin-left: 3vw;
-	/* background-color: pink; */
+	max-width: auto;
 }
 
 article {
@@ -223,14 +232,19 @@ tr:nth-child(odd) {
 	background: #DDD;
 }
 
+/* aligns text inside table cells in the center*/
 td {
+	text-align: center;
+}
+
+td, th {
 	/* border: 1px solid grey; */
 	padding: 0.5vw;
 	font-size: 1.5vw;
 	width: 25vw;
 }
 
-td:last-child {
+td:last-child, th:last-child {
 	width: 10vw;
-	text-align: right;
+	/*text-align: right;*/
 }
