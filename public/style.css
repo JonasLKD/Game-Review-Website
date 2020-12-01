@@ -67,7 +67,7 @@ header > img {
 }
 
 p, legend {
-	font-size: 1.5vw;
+	font-size: 1.2vw;
 }
 
 main {
@@ -152,7 +152,8 @@ legend {
 }
 
 input[type="file"] {
-	display: none;
+	/* commented this out choose file button was not appearing */
+	/*display: none;*/ 
 }
 
 input[type="submit"], header > a, .custom-file-upload {
@@ -172,8 +173,9 @@ input[type="submit"]:hover, header > a:hover, .custom-file-upload:hover {
   background-color: white;
 }
 
-input[type="text"], input[type="email"], input[type="password"], textarea, select {
-	font-size: 1.5vw;
+/* added type="number" so width and padding can match the style of the text inputs */
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea, select {
+	font-size: 1vw;
 	width: 25vw;
 	border: 1px solid #CCC;
 	padding: 0.5vw;
@@ -184,7 +186,24 @@ input[type="text"], input[type="email"], input[type="password"], textarea, selec
 textarea {
 	height: 10vw;
 	resize: none;
+	width: -webkit-fill-available;
 }
+
+/* turns the border of the textarea red if invalid
+ * and darkgreen once valid */
+
+input:required, textarea:required {
+	border-width: 2px;
+}
+
+input:invalid, textarea:invalid {
+	border-color: red;
+}
+
+/* section commented out due to it being redundant for functionality */
+/*input:valid, textarea:valid {
+	border-color: darkgreen;
+}*/
 
 select {
 	width: 26.3vw;
@@ -240,7 +259,7 @@ td {
 td, th {
 	/* border: 1px solid grey; */
 	padding: 0.5vw;
-	font-size: 1.5vw;
+	font-size: 1vw;
 	width: 25vw;
 }
 

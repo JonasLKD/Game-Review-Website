@@ -33,4 +33,15 @@ router.get('/', async ctx => {
 	}
 })
 
+// new route for the add review handlebar 
+router.get('/addreview', async ctx => {
+	await ctx.render('addreview', ctx.hbs)
+})
+
+// new route to post and process the data entered by the user
+router.post('/addreview', async ctx => {
+	console.log('adding a review')
+	return ctx.redirect('/gamereviews?msg=New review added')
+})
+
 export default router

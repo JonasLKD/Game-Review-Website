@@ -78,7 +78,7 @@ router.post('/login', async ctx => {
 		await account.login(body.user, body.pass)
 		ctx.session.authorised = true
 		const referrer = body.referrer || '/gamereviews'
-		return ctx.redirect(`${referrer}?msg=you are now logged in...`)
+		return ctx.redirect(`${referrer}?msg=You are now logged in...`)
 	} catch(err) {
 		ctx.hbs.msg = err.message
 		await ctx.render('login', ctx.hbs)
@@ -89,7 +89,7 @@ router.post('/login', async ctx => {
 
 router.get('/logout', async ctx => {
 	ctx.session.authorised = null
-	ctx.redirect('/?msg=you are now logged out')
+	ctx.redirect('/?msg=You are now logged out')
 })
 
 export default router

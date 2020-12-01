@@ -1,0 +1,49 @@
+
+<!doctype html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Add Review</title>
+		<meta name="description" content="form to add new books">
+		<meta name="author" content="Mark Tyers">
+		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+		<script type="module" src="main.js"></script>
+	</head>
+	<body>
+		<header>
+		<h1>Add Review</h1>
+		<a href="/logout">Log out</a>
+		</header>
+		{{#if msg}}
+ 			<aside>
+				<p class="msg">{{msg}}</p>
+			</aside>
+		{{/if}}
+		<main>
+			<form method="post" action="/gamereviews/addreview" enctype="mutlipart/form-data">
+				<p>
+					<label for="game">Game Title</label><br />
+					<input type="text" name="game" placeholder="e.g. The Last of Us" value="" autofocus required />
+				</p>
+				<p>
+					<label for="publisher">Publisher</label><br />
+					<input type="text" name="publisher" placeholder="e.g. Naughty Dogs" required />
+				</p>
+				<p>
+					<label for="release_year">Release Year</label><br />
+					<input type="number" name="release_year" placeholder="e.g. 2013" min="1940" max="2021" required />
+				</p>
+				<p>
+					<label for="thumbnail">Game Cover</label><br />
+					<input type="file" name="thumbnail" accept="image/*" />
+				</p>
+				<p>
+					<label for="review">Review</label><br />
+					<textarea name="review" placeholder="Type review here..." required></textarea>
+				</p>
+				<p><input type="submit" value="Add Review"></p>
+			</form>
+		</main>
+	</body>
+</html>
