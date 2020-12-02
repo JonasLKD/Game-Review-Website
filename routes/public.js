@@ -75,8 +75,11 @@ router.post('/login', async ctx => {
 	ctx.hbs.body = ctx.request.body
 	try {
 		const body = ctx.request.body
-		await account.login(body.user, body.pass)
+		const id = await account.login(body.user, body.pass)
 		ctx.session.authorised = true
+		// created a cookie storing the user's id
+		ctx.session.user = body.user
+		ctx.session.userid = id
 		const referrer = body.referrer || '/gamereviews'
 		return ctx.redirect(`${referrer}?msg=You are now logged in...`)
 	} catch(err) {
@@ -89,6 +92,8 @@ router.post('/login', async ctx => {
 
 router.get('/logout', async ctx => {
 	ctx.session.authorised = null
+	delete ctx.session.user
+	delete ctx.session.userid
 	ctx.redirect('/?msg=You are now logged out')
 })
 

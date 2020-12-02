@@ -40,8 +40,24 @@ router.get('/addreview', async ctx => {
 
 // new route to post and process the data entered by the user
 router.post('/addreview', async ctx => {
-	console.log('adding a review')
-	return ctx.redirect('/gamereviews?msg=New review added')
+	const reviews = await new Reviews(dbName)
+	try {
+		ctx.request.body.account = ctx.session.userid
+		if(ctx.request.files.thumbnail.name) {
+			ctx.request.body.filePath = ctx.request.files.thumbnail.path
+			ctx.request.body.fileName = ctx.request.files.thumbnail.name
+			ctx.request.body.fileType = ctx.request.files.thumbnail.type
+		}
+		await reviews.add(ctx.request.body)
+		console.log('adding a review')
+		return ctx.redirect('/gamereviews?msg=New review added')
+	} catch(err) {
+		console.log(err)
+		await ctx.render('error', ctx.hbs)
+	} finally {
+		reviews.close()
+	}
+	
 })
 
 export default router

@@ -1,5 +1,9 @@
 // using sqlite to allow the use of sql commands through javascript
 import sqlite from 'sqlite-async'
+// using mime to allow the use of microtime stamp
+import mime from 'mime-types'
+// using fs to allow copying files to directories
+import fs from 'fs-extra'
 
 /* Module that manages the contacts in the Games Review system. */
 class Reviews {
@@ -15,6 +19,7 @@ class Reviews {
 				publisher TEXT NOT NULL,\
 				release_year INTEGER NOT NULL,\
 				thumbnail TEXT,\
+				review,\
 				FOREIGN KEY(userid) REFERENCES users(id)\
 			);'
 			// await command allows the code above to finish executing before continuing
@@ -34,6 +39,36 @@ class Reviews {
 			if(reviews[i].thumbnail === null) reviews[i].thumbnail = 'https://upload.wikimedia.org/wikipedia/en/6/60/No_Picture.jpg'
 		}
 		return reviews
+	}
+	
+	// data from the review form will be passed through add function
+	async add(data) {
+		// console.log('ADD')
+		console.log(data)
+		let filename
+		if(data.fileName) {
+			// provides a millisecond timestamp
+			filename = `${Date.now()}.${mime.extension(data.fileType)}`
+			console.log(filename)
+			// the file will be copied into the correct directory
+			await fs.copy(data.filePath, `public/images/${filename}`)
+		}
+		try {
+			// data from form inserted into database
+			const sql = `INSERT INTO reviews(userid, game, publisher, release_year, review, thumbnail)\
+									VALUES(${data.account}, "${data.game}", "${data.publisher}", ${data.release_year}, "${data.review}", "${filename}")`
+			console.log(sql)
+			await this.db.run(sql)
+			return true
+		} catch(err) {
+			console.log(err)
+			throw(err)
+		}
+	}
+	
+	// function to close the database
+	async close() {
+		await this.db.close()
 	}
 }
 

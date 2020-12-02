@@ -59,11 +59,13 @@ class Accounts {
 		let sql = `SELECT count(id) AS count FROM users WHERE user="${username}";`
 		const records = await this.db.get(sql)
 		if(!records.count) throw new Error(`username "${username}" not found`)
-		sql = `SELECT pass FROM users WHERE user = "${username}";`
+		// retrieves the id and password
+		sql = `SELECT id, pass FROM users WHERE user = "${username}";`
 		const record = await this.db.get(sql)
 		const valid = await bcrypt.compare(password, record.pass)
 		if(valid === false) throw new Error(`invalid password for account "${username}"`)
-		return true
+		// returns the id from the record
+		return record.id
 	}
 
 	async close() {
