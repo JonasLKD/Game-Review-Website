@@ -1,0 +1,30 @@
+
+<!doctype html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Detailed Review {{id}}</title>
+		<meta name="description" content="form to add new books">
+		<meta name="author" content="Mark Tyers">
+		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+		<script type="module" src="main.js"></script>
+	</head>
+	<body>
+		<header>
+			<h1>Detailed Review {{id}}</h1>
+				<a href="/logout">Log out</a>
+		</header>
+		{{#if msg}}
+ 			<aside>
+				<p class="msg">{{msg}}</p>
+			</aside>
+		{{/if}}
+	<main>
+		<p>Display Review {{id}}</p>
+	</main>
+		<aside class="fixed top left">
+		<button class="back">Back</button>
+		</aside>
+	</body>
+</html>

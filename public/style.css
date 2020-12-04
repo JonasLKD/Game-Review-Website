@@ -79,10 +79,10 @@ main {
 	background-color: lightgray;
 }
 
-/* sizes the pictures to same width*/
+/* formats the pictures to have the same width to look uniform*/
 img {
-	width: 100%;
-	max-width: auto;
+	width: 80%;
+	border-radius: 0.5vw;
 }
 
 article {
@@ -99,7 +99,8 @@ aside {
 
 main a {
 	color: black;
-	text-decoration: underline;
+	/* game title will be hyperlinks, so text-decoration set as none will prevent automatic underlining */
+	text-decoration: none;
 }
 
 main a:hover {

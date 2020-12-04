@@ -33,6 +33,18 @@ router.get('/', async ctx => {
 	}
 })
 
+// new route for the reviewdetials handlebar
+router.get('/reviewdetails/:id', async ctx => {
+	try {
+		console.log(`record: ${ctx.params.id}`)
+		ctx.hbs.id = ctx.params.id
+		await ctx.render('detailedreview', ctx.hbs)
+	} catch(err) {
+		console.log(err)
+		await ctx.render('error', ctx.hbs)
+	}
+})
+
 // new route for the add review handlebar 
 router.get('/addreview', async ctx => {
 	await ctx.render('addreview', ctx.hbs)

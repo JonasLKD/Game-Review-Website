@@ -36,21 +36,21 @@ class Reviews {
 		const reviews = await this.db.all(sql)
 		// checks if a thumbnail is not avaiable, a placeholder thumbnail will be used
 		for(const i in reviews) {
-			if(reviews[i].thumbnail === null) reviews[i].thumbnail = 'https://upload.wikimedia.org/wikipedia/en/6/60/No_Picture.jpg'
+			if(reviews[i].thumbnail === "undefined") reviews[i].thumbnail = 'no_picture.jpg' // used to be thumbnail === null
 		}
 		return reviews
 	}
 	
-	// data from the review form will be passed through add function
+	// data from the addreview form will be passed through add function
 	async add(data) {
-		// console.log('ADD')
+		console.log('ADD')
 		console.log(data)
 		let filename
 		if(data.fileName) {
 			// provides a millisecond timestamp
 			filename = `${Date.now()}.${mime.extension(data.fileType)}`
 			console.log(filename)
-			// the file will be copied into the correct directory
+			// the file will be copied into the images directory to be used later
 			await fs.copy(data.filePath, `public/images/${filename}`)
 		}
 		try {
