@@ -41,6 +41,22 @@ class Reviews {
 		return reviews
 	}
 	
+	async getByID(id) {
+		try {
+			const sql = `SELECT users.user, reviews.* FROM reviews, users\
+										WHERE reviews.userid = users.id AND reviews.id = ${id};`
+			console.log(sql)
+			const review = await this.db.get(sql)
+			if(review.thumbnail === "undefined") review.thumbnail = 'no_picture.jpg'
+			const dateTime = new Date(review)
+			const date = `${dateTime.getDate()}/${dateTime.getMonth()+1}/${dateTime.getFullYear()}`
+			return review
+		} catch(err) {
+			console.log(err)
+			throw err
+		}
+	}
+	
 	// data from the addreview form will be passed through add function
 	async add(data) {
 		console.log('ADD')

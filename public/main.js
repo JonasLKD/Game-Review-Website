@@ -11,6 +11,19 @@ window.addEventListener('DOMContentLoaded', event => {
 			document.querySelector('aside').hidden = true
 		}, delay)
 	}
+	
+	// if there is a button that has a class of back and if clicked
+	// the page is rolled to the previous page
+	if(document.querySelector('button.back')) {
+		document.querySelectorAll('button.back').forEach( element => {
+			element.addEventListener('click', () => {
+				console.log('back button clicked')
+				console.log(window.history)
+				window.history.back()
+			})
+		})
+	}
+	
 	if(document.querySelector('input')) {
 		document.querySelectorAll('input').forEach( element => {
 			element.addEventListener('invalid', event => {

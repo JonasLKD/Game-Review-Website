@@ -80,8 +80,13 @@ main {
 }
 
 /* formats the pictures to have the same width to look uniform*/
-img {
+td img {
 	width: 80%;
+	border-radius: 0.5vw;
+}
+
+img {
+	width: 30%;
 	border-radius: 0.5vw;
 }
 
