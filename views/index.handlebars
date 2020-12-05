@@ -5,7 +5,7 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Game Reviews</title>
-		<meta name="description" content="form to add new books">
+		<meta name="description" content="displays reviews LOGGED OUT">
 		<meta name="author" content="Mark Tyers">
 		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
 		<script type="module" src="main.js"></script>
@@ -29,8 +29,8 @@
 			<tr><th>Game Cover</th><th>Game</th><th>Publisher</th><th>Release Year</th></tr>
 			{{#each records}}
 			<tr>
-				<td><a href="/gamereviews/reviewdetails/{{this.id}}"><img src="images/{{this.thumbnail}}" alt="Game Cover"></a></td>
-				<td><a href="/gamereviews/reviewdetails/{{this.id}}">{{this.game}}</a></td>
+				<td><a href="/reviewdetails/{{this.id}}"><img src="images/{{this.thumbnail}}" alt="Game Cover" class="click_img"></a></td>
+				<td><a href="/reviewdetails/{{this.id}}">{{this.game}}</a></td>
 				<td>{{this.publisher}}</td>
 				<td>{{this.release_year}}</td>
 			</tr>

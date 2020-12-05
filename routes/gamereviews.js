@@ -9,7 +9,7 @@ const dbName = 'website.db'
 async function checkAuth(ctx, next) {
 	console.log('secure router middleware')
 	console.log(ctx.hbs)
-	if(ctx.hbs.authorised !== true) return ctx.redirect('/login?msg=you need to log in&referrer=/secure')
+	if(ctx.hbs.authorised !== true) return ctx.redirect('/login?msg=You need to log in&referrer=/gamereviews')
 	await next()
 }
 
@@ -33,7 +33,7 @@ router.get('/', async ctx => {
 	}
 })
 
-// new route for the reviewdetials handlebar
+// new route for the reviewdetials handlebar for logged in users
 router.get('/reviewdetails/:id', async ctx => {
 	const reviews = await new Reviews(dbName)
 	try {
@@ -41,7 +41,7 @@ router.get('/reviewdetails/:id', async ctx => {
 		ctx.hbs.review = await reviews.getByID(ctx.params.id)
 		console.log(ctx.hbs)
 		ctx.hbs.id = ctx.params.id
-		await ctx.render('detailedreview', ctx.hbs)
+		await ctx.render('detailedreviewIN', ctx.hbs)
 	} catch(err) {
 		console.log(err)
 		await ctx.render('error', ctx.hbs)

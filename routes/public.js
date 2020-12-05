@@ -34,6 +34,21 @@ router.get('/', async ctx => {
 	}
 })
 
+// new route for the reviewdetials handlebar for logged out users
+router.get('/reviewdetails/:id', async ctx => {
+	const reviews = await new Reviews(dbName)
+	try {
+		console.log(`record: ${ctx.params.id}`)
+		ctx.hbs.review = await reviews.getByID(ctx.params.id)
+		console.log(ctx.hbs)
+		ctx.hbs.id = ctx.params.id
+		await ctx.render('detailedreviewOUT', ctx.hbs)
+	} catch(err) {
+		console.log(err)
+		await ctx.render('error', ctx.hbs)
+	}
+})
+
 
 /**
  * The user registration page.
