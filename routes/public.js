@@ -7,7 +7,7 @@ router.use(bodyParser({multipart: true}))
 
 import Accounts from '../modules/accounts.js'
 // reviews table is imported to be used for the home page without log in
-import Reviews from '../modules/reviews.js'
+import Games from '../modules/games.js'
 const dbName = 'website.db'
 
 /**
@@ -17,11 +17,11 @@ const dbName = 'website.db'
  * @route {GET} /
  */
 router.get('/', async ctx => {
-	// created reviews object
-	const reviews = await new Reviews(dbName)
+	// created games object
+	const games = await new Games(dbName)
 	try {
-		// calls the records of reviews 
-		const records = await reviews.all()
+		// calls the records of games 
+		const records = await games.all()
 		// prints of the records in the terminal
 		console.log(records)
 		// records property added
@@ -36,10 +36,10 @@ router.get('/', async ctx => {
 
 // new route for the reviewdetials handlebar for logged out users
 router.get('/reviewdetails/:id', async ctx => {
-	const reviews = await new Reviews(dbName)
+	const games = await new Games(dbName)
 	try {
 		console.log(`record: ${ctx.params.id}`)
-		ctx.hbs.review = await reviews.getByID(ctx.params.id)
+		ctx.hbs.game = await games.getByIDGames(ctx.params.id)
 		console.log(ctx.hbs)
 		ctx.hbs.id = ctx.params.id
 		await ctx.render('detailedreviewOUT', ctx.hbs)

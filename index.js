@@ -19,6 +19,7 @@ async function getHandlebarData(ctx, next) {
 		// pulls values
 		user: ctx.session.user,
 		userid: ctx.session.userid,
+		gamesid: ctx.session.gamesid, // added
 		host: `https://${ctx.host}`
 	}
 	for(const key in ctx.query) ctx.hbs[key] = ctx.query[key]

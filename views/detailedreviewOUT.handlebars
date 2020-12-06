@@ -4,7 +4,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>{{review.game}} Review</title>
+		<title>{{game.game}} Review</title>
 		<meta name="description" content="detailed reviews">
 		<meta name="author" content="Mark Tyers">
 		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
@@ -13,7 +13,7 @@
 	<body>
 		<header>
 			<h1>Game Reviews</h1>
-			<!--<h1>{{review.game}} Review</h1>-->
+			<!--<h1>{{game.game}} Review</h1>-->
 				<a href="/login">Log in</a>
 		</header>
 		{{#if msg}}
@@ -24,14 +24,14 @@
 	<main>
 		<div class="grid-container">
 			<div class="div1">
-		<img src="{{host}}/images/{{review.thumbnail}}" />
+		<img src="{{host}}/images/{{game.thumbnail}}" />
 			</div>
 			<div class="div2">
-				<h2>{{review.game}}</h2>
+				<h2>{{game.game}}</h2>
 			</div>
 			<div class="div3">
-		<p><span class="bold">Publisher:</span> <span>{{review.publisher}}</span></p> 
-		<p><span class="bold">Release Year:</span> <span>{{review.release_year}}</span></p>
+		<p><span class="bold">Publisher:</span> <span>{{game.publisher}}</span></p> 
+		<p><span class="bold">Release Year:</span> <span>{{game.release_year}}</span></p>
 			</div>
 		</div>
 	</main>	

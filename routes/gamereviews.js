@@ -3,6 +3,7 @@ import Router from 'koa-router'
 
 const router = new Router({ prefix: '/gamereviews' })
 
+import Games from '../modules/games.js'
 import Reviews from '../modules/reviews.js'
 const dbName = 'website.db'
 
@@ -16,11 +17,11 @@ async function checkAuth(ctx, next) {
 router.use(checkAuth)
 
 router.get('/', async ctx => {
-	// created reviews object
-	const reviews = await new Reviews(dbName)
+	// created games object
+	const games = await new Games(dbName)
 	try {
-		// calls the records of reviews 
-		const records = await reviews.all()
+		// calls the records of games 
+		const records = await games.all()
 		// prints out the records in the terminal
 		console.log(records)
 		// records property added
@@ -35,10 +36,12 @@ router.get('/', async ctx => {
 
 // new route for the reviewdetials handlebar for logged in users
 router.get('/reviewdetails/:id', async ctx => {
+	const games = await new Games(dbName)
 	const reviews = await new Reviews(dbName)
 	try {
 		console.log(`record: ${ctx.params.id}`)
-		ctx.hbs.review = await reviews.getByID(ctx.params.id)
+		ctx.hbs.game = await games.getByIDGames(ctx.params.id)
+		ctx.hbs.review = await reviews.getByIDReviews(ctx.params.id)
 		console.log(ctx.hbs)
 		ctx.hbs.id = ctx.params.id
 		await ctx.render('detailedreviewIN', ctx.hbs)
@@ -48,14 +51,32 @@ router.get('/reviewdetails/:id', async ctx => {
 	}
 })
 
+router.post('/reviewdetails/:id', async ctx => {
+	const reviews = await new Reviews(dbName)
+	const games = await new Games(dbName) // added
+	try {
+		const gamesid = await games.getSpecificIDGames(ctx.params.id) // added
+		ctx.request.body.account = ctx.session.userid
+		ctx.request.body.gamesid = ctx.session.gamesid // added
+		// might have to delete the cookies
+		await reviews.add(ctx.request.body)
+		return ctx.redirect('/gamereviews?msg=New review added')
+	} catch(err) {
+		console.log(err)
+		await ctx.render('error', ctx.hbs)
+	} finally {
+		reviews.close()
+	}
+})
+
 // new route for the add review handlebar 
-router.get('/addreview', async ctx => {
-	await ctx.render('addreview', ctx.hbs)
+router.get('/addgame', async ctx => {
+	await ctx.render('addgame', ctx.hbs)
 })
 
 // new route to post and process the data entered by the user
-router.post('/addreview', async ctx => {
-	const reviews = await new Reviews(dbName)
+router.post('/addgame', async ctx => {
+	const games = await new Games(dbName)
 	try {
 		ctx.request.body.account = ctx.session.userid
 		if(ctx.request.files.thumbnail.name) {
@@ -63,14 +84,14 @@ router.post('/addreview', async ctx => {
 			ctx.request.body.fileName = ctx.request.files.thumbnail.name
 			ctx.request.body.fileType = ctx.request.files.thumbnail.type
 		}
-		await reviews.add(ctx.request.body)
-		console.log('adding a review')
-		return ctx.redirect('/gamereviews?msg=New review added')
+		await games.add(ctx.request.body)
+		console.log('adding a game review')
+		return ctx.redirect('/gamereviews?msg=New game added')
 	} catch(err) {
 		console.log(err)
 		await ctx.render('error', ctx.hbs)
 	} finally {
-		reviews.close()
+		games.close()
 	}
 	
 })

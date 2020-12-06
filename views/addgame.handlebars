@@ -4,7 +4,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Add Review</title>
+		<title>Add Game</title>
 		<meta name="description" content="form to add new books">
 		<meta name="author" content="Mark Tyers">
 		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
 	</head>
 	<body>
 		<header>
-		<h1>Add Game Review</h1>
+		<h1>Add Game</h1>
 		<a href="/logout">Log out</a>
 		</header>
 		{{#if msg}}
@@ -21,7 +21,7 @@
 			</aside>
 		{{/if}}
 		<main>
-			<form method="post" action="/gamereviews/addreview" enctype="multipart/form-data">
+			<form method="post" action="/gamereviews/addgame" enctype="multipart/form-data">
 				<p>
 					<label class="bold" for="game">Game Title</label><br />
 					<input type="text" name="game" placeholder="e.g. The Last of Us" value="" data-msg="Please enter a Game Title" autofocus required />
@@ -42,7 +42,7 @@
 					<label class="bold" for="review">Review</label><br />
 					<textarea name="review" placeholder="Type review here..." data-msg="Please enter your Review" required></textarea>
 				</p>
-				<p><input type="submit" value="Add Review"></p>
+				<p><input type="submit" value="Add Game"></p>
 			</form>
 		</main>
 		<main>

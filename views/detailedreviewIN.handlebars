@@ -4,7 +4,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>{{review.game}} Review</title>
+		<title>{{game.game}} Review</title>
 		<meta name="description" content="detailed reviews">
 		<meta name="author" content="Mark Tyers">
 		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
@@ -12,7 +12,7 @@
 	</head>
 	<body>
 		<header>
-			<h1>{{review.game}} Review</h1>
+			<h1>{{game.game}} Review</h1>
 				<a href="/logout">Log out</a>
 		</header>
 		{{#if msg}}
@@ -23,18 +23,38 @@
 	<main>
 		<div class="grid-container">
 			<div class="div1">
-		<img src="{{host}}/images/{{review.thumbnail}}" />
+		<img src="{{host}}/images/{{game.thumbnail}}" />
 			</div>
 			<div class="div2">
-				<h2>{{review.game}}</h2>
+				<h2>{{game.game}}</h2>
 			</div>
 			<div class="div3">
-		<p><span class="bold">Publisher:</span> <span>{{review.publisher}}</span></p> 
-		<p><span class="bold">Release Year:</span> <span>{{review.release_year}}</span></p>
+		<p><span class="bold">Publisher:</span> <span>{{game.publisher}}</span></p> 
+		<p><span class="bold">Release Year:</span> <span>{{game.release_year}}</span></p>
 			</div>
 		</div>
-		<p>Logged in</p>
 	</main>	
+		<main>
+			<h3>Reviews</h3>
+			<div class="grid-container_2">
+				<div class="div1">
+					<p><span class="bold">{{review.user}}</span></p>
+					<p>{{review.review}}</p>
+				</div>
+				<div class="div2_2">
+					<p><span class="bold">{{review.date}}</span></p>
+				</div>
+			</div>
+		</main>
+		<main style="padding-bottom: 0.5em">
+			<form method="post" action="/gamereviews/reviewdetails/:id" enctype="multipart/form-data">
+				<p>
+					<label class="bold" for="review">Add Your Review</label><br />
+					<textarea name="review" placeholder="Post a review" style="margin-top: 1vw"></textarea>
+				</p>
+				<p><input type="submit" value="Add Review"></p>
+			</form>
+		</main>
 		<main>
 			<button class="back button">Back</button>
 		</main>
