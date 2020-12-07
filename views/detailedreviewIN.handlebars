@@ -34,19 +34,7 @@
 			</div>
 		</div>
 	</main>	
-		<main>
-			<h3>Reviews</h3>
-			<div class="grid-container_2">
-				<div class="div1">
-					<p><span class="bold">{{review.user}}</span></p>
-					<p>{{review.review}}</p>
-				</div>
-				<div class="div2_2">
-					<p><span class="bold">{{review.date}}</span></p>
-				</div>
-			</div>
-		</main>
-		<main style="padding-bottom: 0.5em">
+		<main style="padding-bottom: 0.5em; padding-top: 0.5em;">
 			<form method="post" action="/gamereviews/reviewdetails/:id" enctype="multipart/form-data">
 				<p>
 					<label class="bold" for="review">Add Your Review</label><br />
@@ -54,6 +42,20 @@
 				</p>
 				<p><input type="submit" value="Add Review"></p>
 			</form>
+		</main>
+		<main>
+			<h3>Reviews</h3>
+			{{#each reviewtag}}
+			<div class="grid-container_2">
+				<div class="div1">
+					<p><span class="bold">{{this.user}}</span></p>
+					<p>{{this.review}}</p>
+				</div>
+				<div class="div2_2">
+					<p><span class="bold">{{this.date}}</span></p>
+				</div>
+			</div>
+			{{/each}}
 		</main>
 		<main>
 			<button class="back button">Back</button>

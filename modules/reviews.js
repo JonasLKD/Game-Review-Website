@@ -38,6 +38,14 @@ class Reviews {
 		return reviews
 		}
 	
+	// selects reviews relative to which game is displayed
+	async relativeReviews(id) {
+		const sql = `SELECT reviews.*, users.user FROM reviews, users\
+									WHERE reviews.gamesid = ${id} AND users.id = reviews.userid;`
+		const reviews = await this.db.all(sql)
+		return reviews.reverse()
+	}
+	
 	async getByIDReviews(id) {
 		try {
 			const sql = `SELECT users.user, reviews.* FROM reviews, users\
@@ -58,11 +66,15 @@ class Reviews {
 		console.log('ADD')
 		console.log(data)
 		try {
+			// getting current date with review
+			const dateTime = new Date()
+			const date = `${dateTime.getDate()}/${dateTime.getMonth()+1}/${dateTime.getFullYear()}`
 			// data from form inserted into database
-			const sql = `INSERT INTO reviews(userid, gameid, review)\
-									VALUES(${data.account}, ${data.gamesid}, "${data.review}")`
+			console.log(date)
+			const sql = `INSERT INTO reviews(userid, gamesid, review, date)\
+									VALUES(${data.account}, ${data.gamesid}, "${data.review}", "${date}")`
 			console.log(sql)
-			/*await this.db.run(sql)*/
+			await this.db.run(sql)
 			return true
 		} catch(err) {
 			console.log(err)

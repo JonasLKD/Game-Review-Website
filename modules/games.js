@@ -61,8 +61,7 @@ class Games {
 										WHERE games.userid = users.id AND games.id = ${id};`
 			console.log(sql)
 			const game = await this.db.get(sql)
-			console.log(game.id)
-			return game.id
+			return game.id // returns the id of the game
 		} catch(err) {
 			console.log(err)
 			throw err

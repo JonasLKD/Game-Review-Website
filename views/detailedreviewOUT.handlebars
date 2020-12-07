@@ -13,8 +13,11 @@
 	<body>
 		<header>
 			<h1>Game Reviews</h1>
-			<!--<h1>{{game.game}} Review</h1>-->
+				{{#if authorised}}
+				<a href="/logout">Log out</a>
+				{{else}}
 				<a href="/login">Log in</a>
+				{{/if}}
 		</header>
 		{{#if msg}}
  			<aside>
@@ -35,6 +38,20 @@
 			</div>
 		</div>
 	</main>	
+			<main>
+			<h3>Reviews</h3>
+			{{#each reviewtag}}
+			<div class="grid-container_2">
+				<div class="div1">
+					<p><span class="bold">{{this.user}}</span></p>
+					<p>{{this.review}}</p>
+				</div>
+				<div class="div2_2">
+					<p><span class="bold">{{this.date}}</span></p>
+				</div>
+			</div>
+			{{/each}}
+		</main>
 		<main>
 			<button class="back button">Back</button>
 		</main>
