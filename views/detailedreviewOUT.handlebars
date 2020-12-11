@@ -5,19 +5,21 @@
 	<head>
 		<meta charset="utf-8">
 		<title>{{game.game}} Review</title>
-		<meta name="description" content="detailed reviews">
+		<meta name="description" content="displays reviews for logged out users">
 		<meta name="author" content="Mark Tyers">
 		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
 		<script type="module" src="{{host}}/main.js"></script>
 	</head>
 	<body>
 		<header>
+			<a class="logo" href="/gamereviews"><img class="logo_img" src="/logo.png" /></a>
 			<h1>Game Reviews</h1>
-				{{#if authorised}}
-				<a href="/logout">Log out</a>
-				{{else}}
-				<a href="/login">Log in</a>
-				{{/if}}
+			{{#if authorised}}
+			<a href="/logout">Log out</a>
+			<p><span class="bold">Welcome, </span>{{user}}</p>
+			{{else}}
+			<a href="/login">Log in</a>
+			{{/if}}
 		</header>
 		{{#if msg}}
  			<aside>
@@ -27,18 +29,19 @@
 	<main>
 		<div class="grid-container">
 			<div class="div1">
-		<img src="{{host}}/images/{{game.thumbnail}}" />
+				<img src="{{host}}/images/{{game.thumbnail}}" />
 			</div>
 			<div class="div2">
 				<h2>{{game.game}}</h2>
+				<p class="pText"><span class="bold">Summary:</span> <span>{{game.summary}}</span></p>
 			</div>
 			<div class="div3">
-		<p><span class="bold">Publisher:</span> <span>{{game.publisher}}</span></p> 
-		<p><span class="bold">Release Year:</span> <span>{{game.release_year}}</span></p>
+				<p><span class="bold">Publisher:</span> <span>{{game.publisher}}</span></p> 
+				<p><span class="bold">Release Year:</span> <span>{{game.release_year}}</span></p>
 			</div>
 		</div>
 	</main>	
-			<main>
+		<main>
 			<h3>Reviews</h3>
 			{{#each reviewtag}}
 			<div class="grid-container_2">
@@ -55,5 +58,8 @@
 		<main>
 			<button class="back button">Back</button>
 		</main>
+		<footer>
+			<p>Made by Jonas Djondo</p>
+		</footer>
 	</body>
 </html>

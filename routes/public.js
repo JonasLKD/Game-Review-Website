@@ -7,6 +7,7 @@ router.use(bodyParser({multipart: true}))
 
 import Accounts from '../modules/accounts.js'
 // Games and Reviews classes are imported as their functions will be used in these routes
+// as well as the website.db database
 import Games from '../modules/games.js'
 import Reviews from '../modules/reviews.js'
 const dbName = 'website.db'
@@ -17,6 +18,8 @@ const dbName = 'website.db'
  * @name Home Page
  * @route {GET} /
  */
+
+// declares records variable that will be used on the gamereivews handlebar
 router.get('/', async ctx => {
 	// created games object
 	const games = await new Games(dbName)
@@ -38,15 +41,16 @@ router.get('/', async ctx => {
 // new route for the reviewdetials handlebar for logged out users
 router.get('/reviewdetails/:id', async ctx => {
 	const games = await new Games(dbName)
-	const reviews = await new Reviews(dbName) // added
+	const reviews = await new Reviews(dbName)
 	try {
 		ctx.request.body.account = ctx.session.userid
-		const reviewtag = await reviews.relativeReviews(ctx.params.id) // added
-		ctx.hbs.reviewtag = reviewtag // added
+		// declares a reviewtag to display specific reviews related to the game
+		ctx.hbs.reviewtag = await reviews.relativeReviews(ctx.params.id)
 		console.log(`record: ${ctx.params.id}`)
 		ctx.hbs.game = await games.getByIDGames(ctx.params.id)
 		ctx.hbs.review = await reviews.getByIDReviews(ctx.params.id)
-		ctx.session.gamesid = await games.getSpecificIDGames(ctx.params.id) // added
+		// declares the gamesid cookie which will be used in the post function
+		ctx.session.gamesid = await games.getSpecificIDGames(ctx.params.id)
 		console.log(ctx.hbs)
 		ctx.hbs.id = ctx.params.id
 		await ctx.render('detailedreviewOUT', ctx.hbs)
@@ -63,6 +67,7 @@ router.get('/reviewdetails/:id', async ctx => {
  * @name Register Page
  * @route {GET} /register
  */
+
 router.get('/register', async ctx => await ctx.render('register'))
 
 /**
@@ -74,9 +79,9 @@ router.get('/register', async ctx => await ctx.render('register'))
 router.post('/register', async ctx => {
 	const account = await new Accounts(dbName)
 	try {
-		// call the functions in the module
+		// call the register function from account.js
 		await account.register(ctx.request.body.user, ctx.request.body.pass, ctx.request.body.email)
-		ctx.redirect(`/login?msg=new user "${ctx.request.body.user}" added, you need to log in`)
+		ctx.redirect(`/login?msg=New user "${ctx.request.body.user}" added, you need to log in`)
 	} catch(err) {
 		ctx.hbs.msg = err.message
 		ctx.hbs.body = ctx.request.body
@@ -87,6 +92,7 @@ router.post('/register', async ctx => {
 	}
 })
 
+// route for the login handlebar
 router.get('/login', async ctx => {
 	console.log(ctx.hbs)
 	await ctx.render('login', ctx.hbs)

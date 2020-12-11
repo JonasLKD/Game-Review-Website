@@ -1,13 +1,15 @@
 
 import Router from 'koa-router'
-
+// setting a new prefix for gamereviews page
 const router = new Router({ prefix: '/gamereviews' })
 
 // Games and Reviews classes are imported as their functions will be used in these routes
+// as well as the website.db database
 import Games from '../modules/games.js'
 import Reviews from '../modules/reviews.js'
 const dbName = 'website.db'
 
+// function checks if the current user is logged in
 async function checkAuth(ctx, next) {
 	console.log('secure router middleware')
 	console.log(ctx.hbs)
@@ -17,6 +19,7 @@ async function checkAuth(ctx, next) {
 
 router.use(checkAuth)
 
+// declares records variable that will be used on the gamereivews handlebar
 router.get('/', async ctx => {
 	// created games object
 	const games = await new Games(dbName)
@@ -41,29 +44,37 @@ router.get('/reviewdetails/:id', async ctx => {
 	const reviews = await new Reviews(dbName)
 	try {
 		ctx.request.body.account = ctx.session.userid
-		const reviewtag = await reviews.relativeReviews(ctx.params.id) // added
-		ctx.hbs.reviewtag = reviewtag // added
+		// declares a reviewtag to display specific reviews related to the game
+		const reviewtag = await reviews.relativeReviews(ctx.params.id)
+		ctx.hbs.reviewtag = reviewtag
 		console.log(`record: ${ctx.params.id}`)
 		ctx.hbs.game = await games.getByIDGames(ctx.params.id)
 		ctx.hbs.review = await reviews.getByIDReviews(ctx.params.id)
-		ctx.session.gamesid = await games.getSpecificIDGames(ctx.params.id) // added
+		// declares the gamesid cookie which will be used in the post function
+		ctx.session.gamesid = await games.getSpecificIDGames(ctx.params.id)
 		console.log(ctx.hbs)
 		ctx.hbs.id = ctx.params.id
+		// checks if the game has any review tags by the user already
+		// if so, the textarea will not appear
 		if (reviewtag.length == 0) {
 			console.log("empty")
 			await ctx.render('detailedreviewIN', ctx.hbs)
 		} else {
 			console.log("not empty")
 			for(let i in reviewtag) {
+				console.log(ctx.session.userid, reviewtag[i].userid)
 					if(reviewtag[i].userid === ctx.session.userid) {
+						console.log("loading OUT page version")
 						await ctx.render('detailedreviewOUT', ctx.hbs)
+						break
 					} else {
+						console.log("loading IN page version")
 						await ctx.render('detailedreviewIN', ctx.hbs)
 					}
 			}
-		} 
-		// await ctx.render('detailedreviewIN', ctx.hbs)
-		return ctx.session.gamesid // added
+		}
+		// returns the current gamesid cookie
+		return ctx.session.gamesid
 	} catch(err) {
 		console.log(err)
 		await ctx.render('error', ctx.hbs)
@@ -72,12 +83,17 @@ router.get('/reviewdetails/:id', async ctx => {
 
 router.post('/reviewdetails/:id', async ctx => {
 	const reviews = await new Reviews(dbName)
-	const games = await new Games(dbName) // added
+	const games = await new Games(dbName)
 	try {
+		// adds both userid and gamesid to the handlebar data bodies
+		// to be used later on in the SQL insertions
 		ctx.request.body.account = ctx.session.userid
-		ctx.request.body.gamesid = ctx.session.gamesid // added
-		// might have to delete the cookies
+		// uses the returned gamesid cookie
+		ctx.request.body.gamesid = ctx.session.gamesid
+		// calls the add function from reviews.js
 		await reviews.add(ctx.request.body)
+		// displays a message saying a new review was added
+		console.log('adding a review to database')
 		return ctx.redirect('/gamereviews?msg=New review added')
 	} catch(err) {
 		console.log(err)
@@ -88,22 +104,22 @@ router.post('/reviewdetails/:id', async ctx => {
 })
 
 // new route for the add review handlebar 
-router.get('/addgame', async ctx => {
-	await ctx.render('addgame', ctx.hbs)
-})
+router.get('/addgame', async ctx => await ctx.render('addgame', ctx.hbs))
 
 // new route to post and process the data entered by the user
 router.post('/addgame', async ctx => {
 	const games = await new Games(dbName)
 	try {
 		ctx.request.body.account = ctx.session.userid
+		// adds the file's path, name, type to the handlebar data bodies
 		if(ctx.request.files.thumbnail.name) {
 			ctx.request.body.filePath = ctx.request.files.thumbnail.path
 			ctx.request.body.fileName = ctx.request.files.thumbnail.name
 			ctx.request.body.fileType = ctx.request.files.thumbnail.type
 		}
 		await games.add(ctx.request.body)
-		console.log('adding a game review')
+		console.log('adding a game to database')
+		// user is redirected to gamesreviews page with message popup
 		return ctx.redirect('/gamereviews?msg=New game added')
 	} catch(err) {
 		console.log(err)

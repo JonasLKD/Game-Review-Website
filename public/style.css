@@ -1,8 +1,39 @@
 
 body {
-		font-family: Arial, Helvetica, sans-serif;
-		margin: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0;
+	/*overflow: overlay;*/
 	}
+
+body {
+	background: #f7f5f5;
+}
+
+/* allows the footer to stay at bottom of page */
+html {
+	position: relative;
+}
+
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+	height: 8px;
+}
+
+/* track */
+::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.1);
+}
+ 
+/* handle */
+::-webkit-scrollbar-thumb {
+  background: #252525;
+}
+
+/* handle hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
 
 /* formats the red message boxes */
 aside {
@@ -18,20 +49,49 @@ aside {
 	color: red;
 	padding: 1em;
 	margin: 2em;
-	border-radius: 0.4vw;
+	border-radius: 0.3vw;
+	z-index: 9999;
 }
 
 header {
-	background-color: white;
-	box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
-	height: 6vw;
+	background: rgb(0 0 0 / 85%);
+  backdrop-filter: saturate(180%) blur(5px);
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,0.7);
+	height: 3.5vw;
 	position: sticky;
 	top: 0;
+	z-index: 9998;
+}
+
+/* footer designed to stay at bottom of page */
+footer {
+	background: rgb(0 0 0 / 85%);
+  backdrop-filter: saturate(180%) blur(5px);
+	position: absolute;
+  width: 100%;
+}
+
+footer p {
+	text-align: center;
+	color: white;
+	font-size: 1vw;
+  padding: 28px;
 }
 
 header p {
-    float: right;
-    margin: 2.3vw;
+  float: right;
+  margin-right: 1.5vw;
+	margin-top: 1.1vw;
+	color: white;
+}
+
+header h1 {
+	color: white;
+	margin-top: 0.3vw;
+}
+
+div h2 {
+    margin: 0;
 }
 
 h1, h2, h3 {
@@ -42,10 +102,9 @@ h1, h2, h3 {
 }
 
 h1 {
-	padding: 1.3vw;
+	/*padding: 1.3vw;*/
 	float: left;
-	font-size: 3vw;
-	margin-left: 6vw;
+	font-size: 2.5vw;
 }
 
 h2 {
@@ -66,39 +125,88 @@ h5, h6 {
 	color: black; /*added*/
 }
 
-
-
 header > a {
-	margin-top: 1.7vw;
+	margin-top: 0.6vw;
 	margin-right: 3vw;
 	float: right;
 	font-size: 1.3vw;
 }
 
+/* overrides everything for logo to function, appear and position correctly*/
 header > img {
-	width: 7vw;
-	border-radius: 50%;
-	position: absolute;
-	left: 0.5vw;
-	top: 0.5vw;
+	width: 5vw;
+	float: left;
+  margin-top: 0.5vw;
+  margin-right: 1vw;
+  margin-left: 2vw;
+	box-shadow: none;
+}
+
+.logo {
+	float: left;
+	box-shadow: none;
+	background-color: transparent;
+  border: none;
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
+	transition-property: none;
+}
+
+/* logo shouldn't change when hovered over*/
+.logo:hover {
+	color: transparent;
+	background-color: transparent;
+	border: transparent;
+}
+
+.logo_img {
+  width: 5vw;
+  height: auto;
+	border-radius: 0;
+	box-shadow: none;
+	margin: 0;
+	margin-top: 0.5vw;
+  margin-right: 0.7vw;
+	margin-left: 2vw;
 }
 
 p, legend {
-	font-size: 1.2vw;
+	font-size: 1.1vw;
 }
 
 main {
-	max-width: 1000px;
+	color: white;
+	max-width: 70vw;
 	margin: auto;
 	margin-top: 2em;
 	padding: 2em;
 	box-sizing: border-box;
-	background-color: lightgray;
 	border-radius: 0.3vw;
+	background: rgb(0 0 0 / 85%);
+	backdrop-filter: saturate(180%) blur(5px);
+	box-shadow: 1px 1px 50px -19px rgba(0,0,0,0.5);
 }
 
-main:last-child {
-    margin-bottom: 2em;
+.main_home {
+	max-width: none;
+	margin-bottom: 15em;
+	background-color: transparent;
+	backdrop-filter: none;
+	box-shadow: none;
+	margin-top: 0;
+}
+
+.main_log_reg {
+	max-width: fit-content;
+}
+
+main > h1, h2, h3 {
+    color: white;
+}
+
+main:last-of-type {
+	margin-bottom: 15.8em;
 }
 
 /* formats the pictures to have the same width to look uniform*/
@@ -107,21 +215,27 @@ td img {
 	border-radius: 0.5vw;
 }
 
-/* images fade when hovered over*/
+/* images scale up when hovered over*/
 .click_img {
-	opacity: 1;
-	transition-duration: 0.4s;
+	transition-duration: 0.6s;
 }
 
 .click_img:hover {
-	opacity: 0.7;
+	transform: scale(1.06);
 }
 
 img {
 	width: 100%;
-	border-radius: 0.5vw;
+	border-radius: 0.3vw;
 	vertical-align: middle;
 	box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+}
+
+a img {
+    object-fit: cover;
+    width: 15vw;
+    height: 25vw;
+    margin: 1vw;
 }
 
 article {
@@ -130,14 +244,14 @@ article {
 	float: left; */
 }
 
-aside {
-	/* background-color: yellow;
-	float: right; */
+/*aside {
+	background-color: yellow;
+	float: right;
 	width: 50vw;
-}
+}*/
 
 main a {
-	color: black;
+	color: white;
 	/* game title will be hyperlinks, so text-decoration set as none will prevent automatic underlining */
 	text-decoration: none;
 }
@@ -191,9 +305,9 @@ legend {
 	padding: 0.6vw;
 }
 
-.button_og {
-	background-color: grey;
-  border: 2px solid grey;
+.button_addgame {
+	background-color: #c10000;
+  border: 2px solid #c10000;
   color: white;
   padding: 0.4vw 0.8vw;
   text-align: center;
@@ -201,23 +315,27 @@ legend {
   display: inline-block;
   font-size: 1.1vw;
 	cursor: pointer;
-	transition-property: color, background-color;
+	transition-property: color, background-color, border;
 	transition-duration: 0.4s;
-	border-radius: 0.4vw;
+	border-radius: 0.3vw;
 	position: fixed;
-  bottom: 10px;
-	right: 10px;
+  bottom: 0;
+  right: 0;
+  margin-bottom: 1vw;
+  margin-right: 2vw;
+	z-index: 1;
+	font-weight: bold;
 }
 
-.button_og:hover {
-  background-color: white;
-	border: 2px solid grey;
-  color: grey;
+.button_addgame:hover {
+  background-color: red;
+	border: 2px solid red;
+  color: white;
 }
 
 .button {
-	background-color: grey;
-  border: 2px solid grey;
+	background-color: #c10000;
+  border: 2px solid #c10000;
   color: white;
   padding: 0.4vw 0.8vw;
   text-align: center;
@@ -225,35 +343,87 @@ legend {
   display: inline-block;
   font-size: 1.1vw;
 	cursor: pointer;
-	transition-property: color, background-color;
+	transition-property: color, background-color, border;
 	transition-duration: 0.4s;
-	border-radius: 0.4vw;
+	border-radius: 0.3vw;
 	width: 100%;
+	font-weight: bold;
 }
 
 .button:hover {
-  background-color: white;
-	border: 2px solid grey;
-  color: grey;
+  background-color: red;
+	border: 2px solid red;
+  color: white;
+}
+
+.button_file {
+	background-color: #c10000;
+  border: 2px solid #c10000;
+  color: white;
+  padding: 0.4vw 0.8vw;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1.1vw;
+	cursor: pointer;
+	transition-property: color, background-color, border;
+	transition-duration: 0.4s;
+	border-radius: 0.3vw;
+	font-weight: bold;
+}
+
+.button_file:hover {
+	background-color: red;
+	border: 2px solid red;
+  color: white;
 }
 
 .bold {
 	font-weight: bold
 }
 
+.horizontal-scroll {
+  overflow: hidden;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  padding: 10px 0;
+}
+
+.item {
+  display: inline-block;
+  white-space: normal;
+  text-align: center;
+  align-items: center;
+  color: white;
+  margin-left: 15px;
+  margin-right: 15px;
+  box-shadow: 1px 1px 50px -8px rgba(0,0,0,0.5);
+  border-radius: 0.3vw;
+	background: rgb(0 0 0 / 85%);
+}
+
+.parent {
+	display: inline-block;
+	margin: 3vw;
+}
+
+.d1 {}
+.d2 { padding-right: 15px;
+    	padding-left: 15px;
+}
+
 .grid-container {
 	display: grid;
 	grid-template-columns: 0.7fr 1fr 0.7fr;
 	grid-template-rows: 1fr;
-	grid-row-gap: 0px;
 	grid-column-gap: 24px; /*added*/
 }
 
 .grid-container_2 {
 	display: grid;
-	grid-template-columns: 1fr 0.3fr;
+	grid-template-columns: 1fr 0.15fr;
 	grid-template-rows: 1fr;
-	grid-row-gap: 0px;
 	grid-column-gap: 24px; /*added*/
 	margin: 1vw;
 	border-top: 1px solid black;
@@ -262,8 +432,14 @@ legend {
 
 .div1 { grid-area: 1 / 1 / 2 / 2; }
 .div2 { grid-area: 1 / 2 / 2 / 3;
-	border-right: 1px solid black;
+	border-right: 1px solid white;
+	line-height: 1.5;
 }
+
+.pText {
+	margin-right: 10px;
+}
+
 .div2_2 { grid-area 1 / 2 / 2 / 3; }
 .div3 { grid-area: 1 / 3 / 2 / 4; }
 
@@ -272,29 +448,27 @@ textarea::placeholder {
 	font-family: Arial;
 }
 
-input[type="file"] {
-	/* commented this out choose file button was not appearing */
-	/*display: none;*/ 
-}
 
 input[type="submit"], header > a, .custom-file-upload {
-  background-color: grey;
-  border: 2px solid grey;
+  background-color: #c10000;
+  border: 2px solid #c10000;
   color: white;
 	padding: 0.4vw 0.8vw;
   text-align: center;
   text-decoration: none;
   display: inline-block;
 	font-size: 1.1vw;
-	border-radius: 0.4vw;
-	transition-property: color, background-color;
+	border-radius: 0.3vw;
+	transition-property: color, background-color, border;
 	transition-duration: 0.4s;
 	cursor: pointer;
+	font-weight: bold;
 }
 
 input[type="submit"]:hover, header > a:hover, .custom-file-upload:hover {
-  color: grey;
-  background-color: white;
+  background-color: red;
+	border: 2px solid red;
+  color: white;
 	
 }
 
@@ -305,7 +479,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
 	border: 1px solid #CCC;
 	padding: 0.5vw;
 	/* margin-bottom: 1vw; */
-	border-radius: 0.6vw;
+	border-radius: 0.3vw;
 }
 
 /* fills the review box to widest width of main*/
@@ -372,15 +546,17 @@ dd {
 table {
 	/* border: 1px solid grey; */
 	border-collapse: collapse;
+	background-color: white;
 }
 
-tr:nth-child(odd) {
+/*tr:nth-child(odd) {
 	background: #DDD;
-}
+}*/
 
 /* aligns text inside table cells in the center*/
 td {
 	text-align: center;
+	border-bottom: 2px black;
 }
 
 td, th {

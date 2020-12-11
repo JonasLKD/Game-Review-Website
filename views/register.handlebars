@@ -12,15 +12,16 @@
 	</head>
 	<body>
 		<header>
-		<h1>Create an Account</h1>
-		<a href="/login">Log in</a>
+			<a class="logo" href="/"><img class="logo_img" src="/logo.png" /></a>
+			<h1>Create an Account</h1>
+			<a href="/login">Log in</a>
 		</header>
 		{{#if msg}}
  			<aside>
 				<p class="msg">{{msg}}</p>
 			</aside>
 		{{/if}}
-		<main>
+		<main class="main_log_reg">
 		<form action="/register" enctype="multipart/form-data" method="post">
 			<p>
 				<label for="user">Username</label><br />
@@ -36,6 +37,10 @@
 			</p>
 			<p><input type="submit" value="Create"></p>
 		</form>
+			<p><a href="/">Home page</a></p>
 		</main>
+		<footer>
+			<p>Made by Jonas Djondo</p>
+		</footer>
 	</body>
 </html>

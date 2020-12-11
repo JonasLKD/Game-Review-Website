@@ -5,15 +5,17 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Add Game</title>
-		<meta name="description" content="form to add new books">
+		<meta name="description" content="form to a new game">
 		<meta name="author" content="Mark Tyers">
 		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
 		<script type="module" src="{{host}}/main.js"></script>
 	</head>
 	<body>
 		<header>
-		<h1>Add Game</h1>
-		<a href="/logout">Log out</a>
+			<a class="logo" href="/gamereviews"><img class="logo_img" src="/logo.png" /></a>
+			<h1>Add Game</h1>
+			<a href="/logout">Log out</a>
+			<p><span class="bold">Welcome, </span>{{user}}</p>
 		</header>
 		{{#if msg}}
  			<aside>
@@ -36,11 +38,11 @@
 				</p>
 				<p>
 					<label class="bold" for="thumbnail">Game Cover</label><br />
-					<input type="file" name="thumbnail" accept="image/*" />
+					<input type="file" name="thumbnail" accept="image/*" class="button_file" />
 				</p>
 				<p>
-					<label class="bold" for="review">Review</label><br />
-					<textarea name="review" placeholder="Type review here..." data-msg="Please enter your Review" required></textarea>
+					<label class="bold" for="summary">Summary</label><br />
+					<textarea name="summary" placeholder="Type summary here..." data-msg="Please enter a Summary" required></textarea>
 				</p>
 				<p><input type="submit" value="Add Game"></p>
 			</form>
@@ -48,5 +50,8 @@
 		<main>
 			<button class="back button">Back</button>
 		</main>
+		<footer>
+			<p>Made by Jonas Djondo</p>
+		</footer>
 	</body>
 </html>

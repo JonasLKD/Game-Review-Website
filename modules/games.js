@@ -19,7 +19,7 @@ class Games {
 				publisher TEXT NOT NULL,\
 				release_year INTEGER NOT NULL,\
 				thumbnail TEXT,\
-				review,\
+				summary TEXT,\
 				FOREIGN KEY(userid) REFERENCES users(id)\
 			);'
 			// await command allows the code above to finish executing before continuing
@@ -38,7 +38,7 @@ class Games {
 		for(const i in games) {
 			if(games[i].thumbnail === "undefined") games[i].thumbnail = 'no_picture.jpg' // used to be thumbnail === null
 		}
-		return games
+		return games.reverse()
 	}
 	
 	async getByIDGames(id) {
@@ -82,8 +82,8 @@ class Games {
 		}
 		try {
 			// data from form inserted into database
-			const sql = `INSERT INTO games(userid, game, publisher, release_year, review, thumbnail)\
-									VALUES(${data.account}, "${data.game}", "${data.publisher}", ${data.release_year}, "${data.review}", "${filename}")`
+			const sql = `INSERT INTO games(userid, game, publisher, release_year, summary, thumbnail)\
+									VALUES(${data.account}, "${data.game}", "${data.publisher}", ${data.release_year}, "${data.summary}", "${filename}")`
 			console.log(sql)
 			await this.db.run(sql)
 			return true
