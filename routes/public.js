@@ -24,7 +24,7 @@ router.get('/', async ctx => {
 	// created games object
 	const games = await new Games(dbName)
 	try {
-		// calls the records of games 
+		// calls the records of games
 		const records = await games.all()
 		// prints of the records in the terminal
 		console.log(records)

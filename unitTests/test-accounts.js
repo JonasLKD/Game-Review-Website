@@ -8,7 +8,8 @@ test('REGISTER : register and log in with a valid account', async test => {
 	try {
 		await account.register('doej', 'password', 'doej@gmail.com')
 	  const login = await account.login('doej', 'password')
-		test.is(login, true, 'unable to log in')
+		// login function returns a record.id that is number datatype
+		test.is(typeof login, 'number', 'unable to log in')
 	} catch(err) {
 		test.fail('error thrown')
 	} finally {

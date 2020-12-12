@@ -1,17 +1,18 @@
 
 /* main.js */
 
-window.addEventListener('DOMContentLoaded', event => {
+// once the delay is triggered via the callback function, the aside message will be hidden
+window.addEventListener('DOMContentLoaded', () => {
 	console.log('DOMContentLoaded')
+
 	if(document.querySelector('aside')) {
-		const delay = 2000 	// delay for 2000ms equivalent to 2 seconds
-		// once the delay is triggered via the callback function, the aside message will be hidden
+		const delay = 2000 	// 2000ms = 2 seconds
 		document.querySelector('aside').hidden = false
 		window.setTimeout( () => {
 			document.querySelector('aside').hidden = true
 		}, delay)
 	}
-	
+
 	// if there is a button that has a class of back and if clicked
 	// the page is rolled to the previous page
 	if(document.querySelector('button.back')) {
@@ -23,7 +24,10 @@ window.addEventListener('DOMContentLoaded', event => {
 			})
 		})
 	}
-	
+})
+
+// if the input fields don't meet requirements they will stay invalid
+window.addEventListener('DOMContentLoaded', () => {
 	if(document.querySelector('input')) {
 		document.querySelectorAll('input').forEach( element => {
 			element.addEventListener('invalid', event => {
@@ -39,6 +43,10 @@ window.addEventListener('DOMContentLoaded', event => {
 			})
 		}, false)
 	}
+})
+
+// same process as input eventlistener above
+window.addEventListener('DOMContentLoaded', () => {
 	// querySelector block for textarea
 	if(document.querySelector('textarea')) {
 		document.querySelectorAll('textarea').forEach( element => {

@@ -24,7 +24,7 @@ router.get('/', async ctx => {
 	// created games object
 	const games = await new Games(dbName)
 	try {
-		// calls the records of games 
+		// calls the records of games
 		const records = await games.all()
 		// prints out the records in the terminal
 		console.log(records)
@@ -53,26 +53,9 @@ router.get('/reviewdetails/:id', async ctx => {
 		// declares the gamesid cookie which will be used in the post function
 		ctx.session.gamesid = await games.getSpecificIDGames(ctx.params.id)
 		console.log(ctx.hbs)
-		ctx.hbs.id = ctx.params.id
-		// checks if the game has any review tags by the user already
-		// if so, the textarea will not appear
-		if (reviewtag.length == 0) {
-			console.log("empty")
-			await ctx.render('detailedreviewIN', ctx.hbs)
-		} else {
-			console.log("not empty")
-			for(let i in reviewtag) {
-				console.log(ctx.session.userid, reviewtag[i].userid)
-					if(reviewtag[i].userid === ctx.session.userid) {
-						console.log("loading OUT page version")
-						await ctx.render('detailedreviewOUT', ctx.hbs)
-						break
-					} else {
-						console.log("loading IN page version")
-						await ctx.render('detailedreviewIN', ctx.hbs)
-					}
-			}
-		}
+		// ctx.hbs.id = ctx.params.id
+		// function checks if current user has already reviewed this game
+		await ctx.render(await reviews.reviewChecker(reviewtag, ctx.session.userid), ctx.hbs)
 		// returns the current gamesid cookie
 		return ctx.session.gamesid
 	} catch(err) {
@@ -83,7 +66,6 @@ router.get('/reviewdetails/:id', async ctx => {
 
 router.post('/reviewdetails/:id', async ctx => {
 	const reviews = await new Reviews(dbName)
-	const games = await new Games(dbName)
 	try {
 		// adds both userid and gamesid to the handlebar data bodies
 		// to be used later on in the SQL insertions
@@ -103,7 +85,7 @@ router.post('/reviewdetails/:id', async ctx => {
 	}
 })
 
-// new route for the add review handlebar 
+// new route for the add review handlebar
 router.get('/addgame', async ctx => await ctx.render('addgame', ctx.hbs))
 
 // new route to post and process the data entered by the user
@@ -117,6 +99,7 @@ router.post('/addgame', async ctx => {
 			ctx.request.body.fileName = ctx.request.files.thumbnail.name
 			ctx.request.body.fileType = ctx.request.files.thumbnail.type
 		}
+		console.log(ctx.request.body)
 		await games.add(ctx.request.body)
 		console.log('adding a game to database')
 		// user is redirected to gamesreviews page with message popup
@@ -127,7 +110,7 @@ router.post('/addgame', async ctx => {
 	} finally {
 		games.close()
 	}
-	
+
 })
 
 export default router

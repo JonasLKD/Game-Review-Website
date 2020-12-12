@@ -26,9 +26,9 @@ class Games {
 			// essentially pausing the execution right here
 			await this.db.run(sql)
 			return this
-			})()
+		})()
 	}
-	
+
 	/* retrieves all the games in the system in an array */
 	async all() {
 		const sql = 'SELECT users.user, games.*FROM games, users\
@@ -36,25 +36,25 @@ class Games {
 		const games = await this.db.all(sql)
 		// checks if a thumbnail is not avaiable, a placeholder thumbnail will be used
 		for(const i in games) {
-			if(games[i].thumbnail === "undefined") games[i].thumbnail = 'no_picture.jpg' // used to be thumbnail === null
+			if(games[i].thumbnail === 'undefined') games[i].thumbnail='no_picture.jpg' // used to be thumbnail === null
 		}
 		return games.reverse()
 	}
-	
+
 	async getByIDGames(id) {
 		try {
 			const sql = `SELECT users.user, games.* FROM games, users\
 										WHERE games.userid = users.id AND games.id = ${id};`
 			console.log(sql)
 			const game = await this.db.get(sql)
-			if(game.thumbnail === "undefined") game.thumbnail = 'no_picture.jpg'
+			if(game.thumbnail === 'undefined') game.thumbnail = 'no_picture.jpg'
 			return game
 		} catch(err) {
 			console.log(err)
 			throw err
 		}
 	}
-	
+
 	async getSpecificIDGames(id) { // added
 		try {
 			const sql = `SELECT users.user, games.* FROM games, users\
@@ -67,11 +67,10 @@ class Games {
 			throw err
 		}
 	}
-	
+
 	// data from the addgame handlebar will be passed through add function
 	async add(data) {
-		console.log('ADD')
-		console.log(data)
+		console.log('ADD', data)
 		let filename
 		if(data.fileName) {
 			// provides a millisecond timestamp
@@ -83,16 +82,17 @@ class Games {
 		try {
 			// data from form inserted into database
 			const sql = `INSERT INTO games(userid, game, publisher, release_year, summary, thumbnail)\
-									VALUES(${data.account}, "${data.game}", "${data.publisher}", ${data.release_year}, "${data.summary}", "${filename}")`
+									VALUES(${data.account}, "${data.game}", "${data.publisher}", ${data.release_year},\
+									"${data.summary}", "${filename}")`
 			console.log(sql)
 			await this.db.run(sql)
 			return true
 		} catch(err) {
 			console.log(err)
-			throw(err)
+			throw err
 		}
 	}
-	
+
 	// function to close the database
 	async close() {
 		await this.db.close()
