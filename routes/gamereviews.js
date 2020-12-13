@@ -48,10 +48,10 @@ router.get('/reviewdetails/:id', async ctx => {
 		const reviewtag = await reviews.relativeReviews(ctx.params.id)
 		ctx.hbs.reviewtag = reviewtag
 		console.log(`record: ${ctx.params.id}`)
-		ctx.hbs.game = await games.getByIDGames(ctx.params.id)
-		ctx.hbs.review = await reviews.getByIDReviews(ctx.params.id)
+		const gamedata = await games.getByIDGames(ctx.params.id)
+		ctx.hbs.game = gamedata
 		// declares the gamesid cookie which will be used in the post function
-		ctx.session.gamesid = await games.getSpecificIDGames(ctx.params.id)
+		ctx.session.gamesid = gamedata.id
 		console.log(ctx.hbs)
 		// ctx.hbs.id = ctx.params.id
 		// function checks if current user has already reviewed this game

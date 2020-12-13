@@ -12,7 +12,7 @@ class Games {
 		return (async() => {
 			this.db = await sqlite.open(dbName)
 			// this table will be used to store the games
-			const sql = 'CREATE TABLE IF NOT EXISTS games (\
+			const sql = 'CREATE TABLE IF NOT EXISTS games(\
 				id INTEGER PRIMARY KEY AUTOINCREMENT,\
 				userid INTEGER,\
 				game TEXT NOT NULL,\
@@ -20,10 +20,9 @@ class Games {
 				release_year INTEGER NOT NULL,\
 				thumbnail TEXT,\
 				summary TEXT,\
-				FOREIGN KEY(userid) REFERENCES users(id)\
-			);'
-			// await command allows the code above to finish executing before continuing
-			// essentially pausing the execution right here
+				FOREIGN KEY(userid) REFERENCES users(id));'
+
+			// games are stored in this table
 			await this.db.run(sql)
 			return this
 		})()
@@ -31,37 +30,27 @@ class Games {
 
 	/* retrieves all the games in the system in an array */
 	async all() {
-		const sql = 'SELECT users.user, games.*FROM games, users\
-									WHERE games.userid = users.id;'
+		// if users name was needed
+		// SELECT users.user, games.*FROM games, users WHERE games.userid = users.id;
+		const sql = 'SELECT games.* FROM games;' //
 		const games = await this.db.all(sql)
 		// checks if a thumbnail is not avaiable, a placeholder thumbnail will be used
 		for(const i in games) {
 			if(games[i].thumbnail === 'undefined') games[i].thumbnail='no_picture.jpg' // used to be thumbnail === null
 		}
+		// returns by the most recent game added
 		return games.reverse()
 	}
 
 	async getByIDGames(id) {
 		try {
-			const sql = `SELECT users.user, games.* FROM games, users\
-										WHERE games.userid = users.id AND games.id = ${id};`
+			// if users name was needed
+			// SELECT users.user, games.* FROM games, users WHERE games.userid = users.id AND games.id = ${id};
+			const sql = `SELECT games.* FROM games WHERE games.id = ${id};`
 			console.log(sql)
 			const game = await this.db.get(sql)
 			if(game.thumbnail === 'undefined') game.thumbnail = 'no_picture.jpg'
 			return game
-		} catch(err) {
-			console.log(err)
-			throw err
-		}
-	}
-
-	async getSpecificIDGames(id) { // added
-		try {
-			const sql = `SELECT users.user, games.* FROM games, users\
-										WHERE games.userid = users.id AND games.id = ${id};`
-			console.log(sql)
-			const game = await this.db.get(sql)
-			return game.id // returns the id of the game
 		} catch(err) {
 			console.log(err)
 			throw err

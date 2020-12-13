@@ -48,9 +48,6 @@ router.get('/reviewdetails/:id', async ctx => {
 		ctx.hbs.reviewtag = await reviews.relativeReviews(ctx.params.id)
 		console.log(`record: ${ctx.params.id}`)
 		ctx.hbs.game = await games.getByIDGames(ctx.params.id)
-		ctx.hbs.review = await reviews.getByIDReviews(ctx.params.id)
-		// declares the gamesid cookie which will be used in the post function
-		ctx.session.gamesid = await games.getSpecificIDGames(ctx.params.id)
 		console.log(ctx.hbs)
 		ctx.hbs.id = ctx.params.id
 		await ctx.render('detailedreviewOUT', ctx.hbs)

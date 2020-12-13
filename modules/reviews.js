@@ -8,26 +8,28 @@ class Reviews {
 		return (async() => {
 			this.db = await sqlite.open(dbName)
 			// this table will be used to store the game reviews
-			const sql = 'CREATE TABLE IF NOT EXISTS reviews (\
+			const sql1 = 'CREATE TABLE IF NOT EXISTS reviews(\
 				id INTEGER PRIMARY KEY AUTOINCREMENT,\
 				userid INTEGER,\
 				gamesid INTEGER,\
 				review TEXT NOT NULL,\
 				date TEXT NOT NULL,\
 				FOREIGN KEY(userid) REFERENCES users(id)\
-				FOREIGN KEY(gamesid) REFERENCES games(id)\
-			);'
-			// await command allows the code above to finish executing before continuing
-			// essentially pausing the execution right here
-			await this.db.run(sql)
+				FOREIGN KEY(gamesid) REFERENCES games(id));'
+
+			// sql2 is only used for unit testing purposes
+			const sql2 = 'CREATE TABLE IF NOT EXISTS users\
+				(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, pass TEXT, email TEXT);'
+
+			// without running sql2, unit testing will throw SQL error
+			await this.db.run(sql1)
+			await this.db.run(sql2)
 			return this
 		})()
 	}
-
-	/* retrieves all the reviews in the system in an array */
+	
 	async all() {
-		const sql = 'SELECT users.user, reviews.*FROM reviews, users\
-									WHERE reviews.userid = users.id;'
+		const sql = 'SELECT reviews.* FROM reviews;'
 		const reviews = await this.db.all(sql)
 		return reviews
 	}
@@ -38,19 +40,6 @@ class Reviews {
 									WHERE reviews.gamesid = ${id} AND users.id = reviews.userid;`
 		const reviews = await this.db.all(sql)
 		return reviews.reverse()
-	}
-
-	async getByIDReviews(id) {
-		try {
-			const sql = `SELECT users.user, reviews.* FROM reviews, users\
-										WHERE reviews.userid = users.id AND gamesid = ${id};`
-			console.log(sql)
-			const review = await this.db.get(sql)
-			return review
-		} catch(err) {
-			console.log(err)
-			throw err
-		}
 	}
 
 	// checks if current user has already reviewed this game
