@@ -7,11 +7,14 @@ body {
 
 body {
 	background: #f7f5f5;
+	height: 1050px;
+  min-height: 100vh;
+  position: relative;
 }
 
 /* allows the footer to stay at bottom of page */
 html {
-	position: relative;
+	/* position: relative; */
 }
 
 /* scrollbar */
@@ -69,6 +72,7 @@ footer {
   backdrop-filter: saturate(180%) blur(5px);
 	position: absolute;
   width: 100%;
+	bottom: 0;
 }
 
 footer p {
@@ -199,6 +203,15 @@ main {
 
 .main_log_reg {
 	max-width: fit-content;
+}
+
+.main_reviewbox {
+	padding-bottom: 0.5em;
+	padding-top: 0.5em;
+}
+
+.reviewtextbox {
+	margin-top: 1vw;
 }
 
 main > h1, h2, h3 {

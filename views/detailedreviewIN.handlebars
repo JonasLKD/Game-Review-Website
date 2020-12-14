@@ -37,11 +37,11 @@
 			</div>
 		</div>
 	</main>	
-		<main style="padding-bottom: 0.5em; padding-top: 0.5em;">
+		<main class="main_reviewbox">
 			<form method="post" action="/gamereviews/reviewdetails/:id" enctype="multipart/form-data">
 				<p>
 					<label class="bold" for="review">Add Your Review</label><br />
-					<textarea name="review" placeholder="Post a review" style="margin-top: 1vw"></textarea>
+					<textarea class="reviewtextbox" name="review" placeholder="Post a review" data-msg="Review cannot be empty" required></textarea>
 				</p>
 				<p><input type="submit" value="Add Review"></p>
 			</form>

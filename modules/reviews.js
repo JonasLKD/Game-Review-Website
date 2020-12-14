@@ -28,11 +28,18 @@ class Reviews {
 		})()
 	}
 	
-	async all() {
+	// function only strictly used for unit testing
+	async registerUnitTest() {
+		const sql = 'INSERT INTO users(user, pass, email) VALUES("doej", "password", "doej@gmail.com")'
+		await this.db.run(sql)
+		return true
+	}
+	
+	/*async all() {
 		const sql = 'SELECT reviews.* FROM reviews;'
 		const reviews = await this.db.all(sql)
 		return reviews
-	}
+	}*/
 
 	// selects reviews relative to which game is displayed
 	async relativeReviews(id) {
@@ -49,7 +56,7 @@ class Reviews {
 			return 'detailedreviewIN'
 		} else {
 			for(const i in reviewtag) {
-				console.log(reviewtag[i].userid, currentUser)
+				// console.log(reviewtag[i].userid, currentUser)
 				if(reviewtag[i].userid === currentUser) {
 					console.log('already reviewed')
 					return 'detailedreviewOUT'
@@ -63,14 +70,12 @@ class Reviews {
 
 	// data from the detailedreviewIN handlebar will be passed through add function
 	async add(data) {
-		console.log('ADD')
-		console.log(data)
+		console.log('ADD', data)
 		try {
 			// getting current date with review
 			const dateTime = new Date()
 			const date = `${dateTime.getDate()}/${dateTime.getMonth()+1}/${dateTime.getFullYear()}`
 			// data from form inserted into database
-			console.log(date)
 			const sql = `INSERT INTO reviews(userid, gamesid, review, date)\
 									VALUES(${data.account}, ${data.gamesid}, "${data.review}", "${date}")`
 			console.log(sql)
