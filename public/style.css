@@ -7,13 +7,15 @@ body {
 
 body {
 	background: #f7f5f5;
-	height: 1050px;
-  min-height: 100vh;
+	/*height: 1050px;*/
+  min-height: calc(100vh - 53.76px);
   position: relative;
+	
 }
 
 /* allows the footer to stay at bottom of page */
 html {
+	height: 100%
 	/* position: relative; */
 }
 
@@ -42,19 +44,32 @@ html {
 aside {
 	max-width: 400px;
 	margin: auto;
+	float: left;
 }
 .msg {
 	position: fixed;
-	top: 2em;
-	border: 1px solid red;
+	top: 1vw;
+	/*border: 1px solid red;*/
+	background: rgb(255 255 255 / 85%);
+  backdrop-filter: saturate(180%) blur(5px);
 	font-weight: bold;
-	background-color: white;
+	/*background-color: white;*/
 	color: red;
-	padding: 1em;
-	margin: 2em;
+	padding: 0.7em;
+	/*margin: 2em;*/
 	border-radius: 0.3vw;
 	z-index: 9999;
+	margin-left: 44vw;
+	animation: neon1 2s ease-in-out infinite alternate;
 }
+
+/* glowing neon effect for the log in and log out message */
+@keyframes neon1 {
+  from {
+    box-shadow:  0 0 50px red, 0 0 40px red, 0 0 30px red, 0 0 20px red, 0 0 5px red;
+  }
+}
+
 
 header {
 	background: rgb(0 0 0 / 85%);
@@ -70,9 +85,10 @@ header {
 footer {
 	background: rgb(0 0 0 / 85%);
   backdrop-filter: saturate(180%) blur(5px);
-	position: absolute;
+	/*position: relative;*/
   width: 100%;
-	bottom: 0;
+	/*bottom: 0;*/
+	margin-top: auto;
 }
 
 footer p {
@@ -439,8 +455,7 @@ legend {
 	grid-template-rows: 1fr;
 	grid-column-gap: 24px; /*added*/
 	margin: 1vw;
-	border-top: 1px solid black;
-	border-bottom: 1px solid black;
+	border-top: 1.5px solid white;
 }
 
 .div1 { grid-area: 1 / 1 / 2 / 2; }

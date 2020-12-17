@@ -6,7 +6,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	console.log('DOMContentLoaded')
 
 	if(document.querySelector('aside')) {
-		const delay = 2000 	// 2000ms = 2 seconds
+		const delay = 2000 	// 5000ms = 5 seconds
 		document.querySelector('aside').hidden = false
 		window.setTimeout( () => {
 			document.querySelector('aside').hidden = true
