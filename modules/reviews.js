@@ -27,14 +27,14 @@ class Reviews {
 			return this
 		})()
 	}
-	
+
 	// function only strictly used for unit testing
 	async registerUnitTest() {
 		const sql = 'INSERT INTO users(user, pass, email) VALUES("doej", "password", "doej@gmail.com")'
 		await this.db.run(sql)
 		return true
 	}
-	
+
 	/*async all() {
 		const sql = 'SELECT reviews.* FROM reviews;'
 		const reviews = await this.db.all(sql)

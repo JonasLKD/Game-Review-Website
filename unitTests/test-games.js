@@ -85,7 +85,7 @@ test('DISPLAY GAMES : display a game that is not on the database', async test =>
 		await games.add({account: 1, game: 'FIFA', publisher: 'EA', release_year: 2000,
 			summary: 'FIFA is a football game.',
 			thumbnail: 'picture.jpg'})
-		const displayGame = await games.getByIDGames(2)
+		const displayGames = await games.getByIDGames(2)
 		//assert
 		test.is(displayGames, 'Game is in database.')
 	} catch(err) {
