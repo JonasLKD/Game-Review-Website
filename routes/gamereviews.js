@@ -64,6 +64,7 @@ router.get('/reviewdetails/:id', async ctx => {
 	}
 })
 
+// new route to post and process the data entered by the user
 router.post('/reviewdetails/:id', async ctx => {
 	const reviews = await new Reviews(dbName)
 	try {

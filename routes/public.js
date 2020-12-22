@@ -95,6 +95,7 @@ router.get('/login', async ctx => {
 	await ctx.render('login', ctx.hbs)
 })
 
+// new route to post and process the data entered by the user
 router.post('/login', async ctx => {
 	const account = await new Accounts(dbName)
 	ctx.hbs.body = ctx.request.body
@@ -115,6 +116,7 @@ router.post('/login', async ctx => {
 	}
 })
 
+// route to log out the user
 router.get('/logout', async ctx => {
 	ctx.session.authorised = null
 	delete ctx.session.user
