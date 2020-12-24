@@ -1,0 +1,15 @@
+#!/bin/bash
+
+#
+# Post commit is called after the commit has been executed.
+# This soley notifies the user on the console that the commit
+# has been sucessfully been committed.
+#
+
+set -e # abort script at first error
+
+# displays to console informing user that commit has been executed
+echo
+echo "POST-COMMIT"
+echo "Your project has been successfully committed to the local repository"
+echo

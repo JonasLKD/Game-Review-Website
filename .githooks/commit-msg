@@ -1,0 +1,32 @@
+#!/bin/bash
+
+#
+# Commit message hook displays a formatted string with the
+# commit message variable which is displayed onto the console.
+#
+
+set -e # abort script at first error
+echo
+echo "COMMIT-MSG"
+
+COMMIT_MSG_FILE=$1
+
+MSG=$(< $1)
+
+echo "Commit message: ${MSG}"
+echo
+
+# user prompt to confirm they want to submit this message via an if statement
+read -p "You are about to submit your commit message, do you want to continue? [y|n] " -n 1 -r < /dev/tty
+echo
+# checking if the user entered a Y/y
+if echo $REPLY | grep -E '^[Yy]$' > /dev/null
+# commit message will be submitted
+then
+	echo "Commit message submitted"
+	echo
+	else
+	# commit message will not be submitted
+	echo "Commit message cancelled."
+	exit 1
+fi
