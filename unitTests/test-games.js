@@ -2,6 +2,7 @@
 import test from 'ava'
 import Games from '../modules/games.js'
 
+/* should add a game to the database */
 test('ADDING GAMES  : add a game to database ', async test => {
 	// arrange
 	test.plan(1)
@@ -27,6 +28,7 @@ test('ADDING GAMES  : add a game to database ', async test => {
 	}
 })
 
+/* should display all the games currently in the database */
 test('DISPLAY GAMES : display all games currenly in database', async test => {
 	// arrange
 	test.plan(1)
@@ -55,6 +57,7 @@ test('DISPLAY GAMES : display all games currenly in database', async test => {
 	}
 })
 
+/* should display the game that was just added which was FIFA */
 test('DISPLAY GAMES : FIFA game should display', async test => {
 	// arrange
 	test.plan(1)
@@ -76,6 +79,7 @@ test('DISPLAY GAMES : FIFA game should display', async test => {
 	}
 })
 
+/* should attempt to display a game that is not in the database */
 test('DISPLAY GAMES : display a game that is not on the database', async test => {
 	// arrange
 	test.plan(1)
