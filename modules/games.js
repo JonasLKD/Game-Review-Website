@@ -28,7 +28,7 @@ class Games {
 		})()
 	}
 
-	/* retrieves all the games in the system in an array */
+	// retrieves all the games in the system in an array
 	async all() {
 		// if users name was needed
 		// SELECT users.user, games.*FROM games, users WHERE games.userid = users.id;
@@ -42,6 +42,7 @@ class Games {
 		return games.reverse()
 	}
 
+	// retrieves specified game which is determined by the parameter ID
 	async getByIDGames(id) {
 		try {
 			// if users name was needed

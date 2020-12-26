@@ -35,12 +35,6 @@ class Reviews {
 		return true
 	}
 
-	/*async all() {
-		const sql = 'SELECT reviews.* FROM reviews;'
-		const reviews = await this.db.all(sql)
-		return reviews
-	}*/
-
 	// selects reviews relative to which game is displayed
 	async relativeReviews(id) {
 		const sql = `SELECT reviews.*, users.user FROM reviews, users\
