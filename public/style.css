@@ -2,7 +2,6 @@
 body {
 	font-family: Arial, Helvetica, sans-serif;
 	margin: 0;
-	/*overflow: overlay;*/
 	}
 
 body {
@@ -16,7 +15,6 @@ body {
 /* allows the footer to stay at bottom of page */
 html {
 	height: 100%
-	/* position: relative; */
 }
 
 /* scrollbar */
@@ -49,14 +47,11 @@ aside {
 .msg {
 	position: fixed;
 	top: 1vw;
-	/*border: 1px solid red;*/
 	background: rgb(255 255 255 / 85%);
   backdrop-filter: saturate(180%) blur(5px);
 	font-weight: bold;
-	/*background-color: white;*/
 	color: red;
 	padding: 0.7em;
-	/*margin: 2em;*/
 	border-radius: 0.3vw;
 	z-index: 9999;
 	margin-left: 44vw;
@@ -122,7 +117,6 @@ h1, h2, h3 {
 }
 
 h1 {
-	/*padding: 1.3vw;*/
 	float: left;
 	font-size: 2.5vw;
 }
@@ -269,15 +263,7 @@ a img {
 
 article {
 	width: 50vw;
-	/* background-color: grey;
-	float: left; */
 }
-
-/*aside {
-	background-color: yellow;
-	float: right;
-	width: 50vw;
-}*/
 
 main a {
 	color: white;
@@ -577,10 +563,6 @@ table {
 	background-color: white;
 }
 
-/*tr:nth-child(odd) {
-	background: #DDD;
-}*/
-
 /* aligns text inside table cells in the center*/
 td {
 	text-align: center;
@@ -588,7 +570,6 @@ td {
 }
 
 td, th {
-	/* border: 1px solid grey; */
 	padding: 0.5vw;
 	font-size: 1vw;
 	width: 25vw;
@@ -596,5 +577,4 @@ td, th {
 
 td:last-child, th:last-child {
 	width: 10vw;
-	/*text-align: right;*/
 }
