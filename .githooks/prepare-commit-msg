@@ -15,13 +15,17 @@ COMMIT_MSG_FILE=$1
 echo "DO NOT LEAVE NONE OF THE COMMIT SECTIONS EMPTY."
 echo
 read -p "Enter summary of commit: " summary < /dev/tty
+# checking if the summary section empty by using the -z flag 
 if [ -z "$summary" ] 
+# if so a message will be displayed and the commit will exit with a non zero status
 then
 	echo "Summary cannot be empty"
 	exit 1
 fi
+#see above
 read -p "Enter why changes were made for commit: " changes < /dev/tty
 if [ -z "$changes" ] 
+# see above
 then
 	echo "Changes cannot be empty"
 	exit 1
@@ -33,4 +37,5 @@ then
 	exit 1
 fi
 
+# when all if statements are passed, the message sections will be stored on COMMIT_MSG_FILE
 echo -e "$summary \n $changes \n $details" > "$COMMIT_MSG_FILE"
