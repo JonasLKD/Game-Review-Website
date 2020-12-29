@@ -26,6 +26,17 @@ async function getHandlebarData(ctx, next) {
 	await next()
 }
 
+// init database
+const dbName = 'website.db'
+import Games from './modules/games.js'
+
+const games = await new Games(dbName)
+try {
+	games.initGames()
+} catch(err) {
+	console.log(err)
+}
+
 app.use(serve('public'))
 app.use(session(app))
 app.use(views('views', { extension: 'handlebars' }, {map: { handlebars: 'handlebars' }}))

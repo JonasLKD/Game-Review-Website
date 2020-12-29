@@ -1,9 +1,22 @@
+
+/** @module Reviews */
+
 // using sqlite to allow the use of sql commands through javascript
 import sqlite from 'sqlite-async'
 
-/* Module that manages the games in the Games Review system. */
+/**
+ * Reviews
+ * ES6 module that handles adding and displaying reviews from the database.
+ */
+
+// Module that manages the games in the Games Review system.
 class Reviews {
-	/* Creating a games object */
+
+	/**
+	 * Creating a reviews object
+	 * @param {String} [dbName=":memory:"] - The name of the database file to use.
+	 */
+
 	constructor(dbName = ':memory:') {
 		return (async() => {
 			this.db = await sqlite.open(dbName)
@@ -28,14 +41,29 @@ class Reviews {
 		})()
 	}
 
-	// function only strictly used for unit testing
+	/**
+	 * function strictly only used for unit testing
+	 *
+	 * @async
+	 * @function registerUnitTest
+	 * @returns {Boolean} returns true if sql statement is run
+	 */
+
 	async registerUnitTest() {
 		const sql = 'INSERT INTO users(user, pass, email) VALUES("doej", "password", "doej@gmail.com")'
 		await this.db.run(sql)
 		return true
 	}
 
-	// selects reviews relative to which game is displayed
+	/**
+	 * selects reviews relative to which game is displayed
+	 *
+	 * @async
+	 * @function relativeReviews
+	 * @params {Number} paramter ID from ctx.params.id
+	 * @returns {Object} returns specified reviews
+	 */
+
 	async relativeReviews(id) {
 		const sql = `SELECT reviews.*, users.user FROM reviews, users\
 									WHERE reviews.gamesid = ${id} AND users.id = reviews.userid;`
@@ -43,10 +71,19 @@ class Reviews {
 		return reviews.reverse()
 	}
 
-	// checks if current user has already reviewed this game
+	/**
+	 * checks if current user has already reviewed this game
+	 *
+	 * @async
+	 * @function reviewChecker
+	 * @params {Object} reviewtag parameter takes relative reviews as argument
+	 * @params {Number} currentUser stores
+	 * @returns {String} returns the handlebar name as a string
+	 */
+
 	async reviewChecker(reviewtag, currentUser) {
 		if (reviewtag.length === 0) {
-			console.log('empty')
+			console.log('Empty')
 			return 'detailedreviewIN'
 		} else {
 			for(const i in reviewtag) {
@@ -62,7 +99,15 @@ class Reviews {
 		}
 	}
 
-	// data from the detailedreviewIN handlebar will be passed through add function
+	/**
+	 * adds data a review to the database from the detailedreviewIN handlebar
+	 *
+	 * @async
+	 * @function add
+	 * @param {Object} object body from the handlebar data entered by user
+	 * @returns {Boolean} returns true if game is added
+	 */
+
 	async add(data) {
 		console.log('ADD', data)
 		try {
@@ -81,7 +126,13 @@ class Reviews {
 		}
 	}
 
-	// function to close the database
+	/**
+	 * closes the database
+	 *
+	 * @async
+	 * @function close
+	 */
+
 	async close() {
 		await this.db.close()
 	}

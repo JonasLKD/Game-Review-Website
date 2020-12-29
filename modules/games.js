@@ -1,3 +1,6 @@
+
+/** @module Games */
+
 // using sqlite to allow the use of sql commands through javascript
 import sqlite from 'sqlite-async'
 // using mime to allow the use of microtime stamp
@@ -5,9 +8,19 @@ import mime from 'mime-types'
 // using fs to allow copying files to directories
 import fs from 'fs-extra'
 
-/* Module that manages the games in the Games Review system. */
+/**
+ * Games
+ * ES6 module that handles adding and displaying games from the database.
+ */
+
+// Module that manages the games in the Games Review system.
 class Games {
-	/* Creating a games object */
+
+	/**
+	 * Creating a games object
+	 * @param {String} [dbName=":memory:"] - The name of the database file to use.
+	 */
+
 	constructor(dbName = ':memory:') {
 		return (async() => {
 			this.db = await sqlite.open(dbName)
@@ -27,8 +40,33 @@ class Games {
 			return this
 		})()
 	}
+	
+	/**
+	 * Initialisation
+	 */
 
-	// retrieves all the games in the system in an array
+	async initGames() {
+		const sql = 'SELECT * FROM games;'
+		const gamesEmpty = await this.db.get(sql)
+		if (gamesEmpty === undefined) {
+			console.log('Table empty.')
+			await fs.readFile('DBinit/games_sql_insert.txt', 'utf-8', (err, data) => {
+				if (err) throw err
+				this.db.run(data)
+				return true
+			})
+		}
+		console.log('Table not empty.')
+	}
+
+	/**
+	 * retrieves and displays all games from database
+	 *
+	 * @async
+	 * @function all
+	 * @returns {Object} returns all games in reverse essentially in most recent order
+	 */
+
 	async all() {
 		// if users name was needed
 		// SELECT users.user, games.*FROM games, users WHERE games.userid = users.id;
@@ -41,6 +79,15 @@ class Games {
 		// returns by the most recent game added
 		return games.reverse()
 	}
+
+	/**
+	 * retrieves specified game which is determined by the parameter ID
+	 *
+	 * @async
+	 * @function getByIDGames
+	 * @param {Number} parameter ID from ctx.params.id
+	 * @returns {Object} returns specified game
+	 */
 
 	// retrieves specified game which is determined by the parameter ID
 	async getByIDGames(id) {
@@ -57,6 +104,15 @@ class Games {
 			throw err
 		}
 	}
+
+	/**
+	 * adds a game to the database
+	 *
+	 * @async
+	 * @function add
+	 * @param {Object} object body from the handlebar data entered by user
+	 * @returns {Boolean} returns true if game is added
+	 */
 
 	// data from the addgame handlebar will be passed through add function
 	async add(data) {
@@ -82,6 +138,13 @@ class Games {
 			throw err
 		}
 	}
+
+	/**
+	 * closes the database
+	 *
+	 * @async
+	 * @function close
+	 */
 
 	// function to close the database
 	async close() {

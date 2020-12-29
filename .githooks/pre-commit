@@ -33,6 +33,16 @@ then
 	exit 1
 fi
 
+#eslint=`./node_modules/.bin/eslint .`
+#echo "$(./node_modules/.bin/eslint .)"
+#if [[ $($eslint -A) ]]
+#then
+#	echo "You don't have problems in code."
+	#exit 1
+#else
+#	echo "You have problems in code"
+#fi
+
 # checks if the user is trying to merge a branch into the master branch
 branch="$(git rev-parse --abbrev-ref HEAD)"
 # checks if 'merge' is the 2nd command after git

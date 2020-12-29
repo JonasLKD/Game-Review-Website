@@ -1,4 +1,6 @@
 
+/** @module Game Reviews */
+
 import Router from 'koa-router'
 // setting a new prefix for gamereviews page
 const router = new Router({ prefix: '/gamereviews' })
@@ -9,6 +11,16 @@ import Games from '../modules/games.js'
 import Reviews from '../modules/reviews.js'
 const dbName = 'website.db'
 
+/**
+	 * checks if the current user is authorised/logged in
+	 *
+	 * @async
+	 * @function checkAuth
+	 * @param {*} ctx parameter
+	 * @param {*} next parameter
+	 * @returns {String} returns a redirect url with a message
+	 */
+
 // function checks if the current user is logged in
 async function checkAuth(ctx, next) {
 	console.log('secure router middleware')
@@ -18,6 +30,13 @@ async function checkAuth(ctx, next) {
 }
 
 router.use(checkAuth)
+
+/**
+ * The Logged in home page.
+ *
+ * @name Logged In Home Page
+ * @route {GET} /
+ */
 
 // declares records variable that will be used on the gamereivews handlebar
 router.get('/', async ctx => {
@@ -37,6 +56,13 @@ router.get('/', async ctx => {
 		await ctx.render('error', ctx.hbs)
 	}
 })
+
+/**
+ * The Logged in review page.
+ *
+ * @name Logged In Review Page
+ * @route {GET} /reviewdetails/:id
+ */
 
 // new route for the reviewdetials handlebar for logged in users
 router.get('/reviewdetails/:id', async ctx => {
@@ -64,6 +90,13 @@ router.get('/reviewdetails/:id', async ctx => {
 	}
 })
 
+/**
+ * The script to process adding a review.
+ *
+ * @name Add Review Script
+ * @route {POST} /reviewdetails/:id
+ */
+
 // new route to post and process the data entered by the user
 router.post('/reviewdetails/:id', async ctx => {
 	const reviews = await new Reviews(dbName)
@@ -86,8 +119,22 @@ router.post('/reviewdetails/:id', async ctx => {
 	}
 })
 
+/**
+ * The Add game page.
+ *
+ * @name Add Game Page
+ * @route {GET} /addgame
+ */
+
 // new route for the add review handlebar
 router.get('/addgame', async ctx => await ctx.render('addgame', ctx.hbs))
+
+/**
+ * The script to process adding a game.
+ *
+ * @name Add Game Script
+ * @route {POST} /addgame
+ */
 
 // new route to post and process the data entered by the user
 router.post('/addgame', async ctx => {

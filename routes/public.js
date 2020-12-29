@@ -1,4 +1,6 @@
 
+/** @module Public */
+
 import Router from 'koa-router'
 import bodyParser from 'koa-body'
 
@@ -13,13 +15,13 @@ import Reviews from '../modules/reviews.js'
 const dbName = 'website.db'
 
 /**
- * The secure home page.
+ * The Logged out home page.
  *
- * @name Home Page
+ * @name Logged Out Home Page
  * @route {GET} /
  */
 
-// declares records variable that will be used on the gamereivews handlebar
+// declares records variable that will be used on the gamereviews handlebar
 router.get('/', async ctx => {
 	// created games object
 	const games = await new Games(dbName)
@@ -37,6 +39,13 @@ router.get('/', async ctx => {
 		await ctx.render('error', ctx.hbs)
 	}
 })
+
+/**
+ * The Logged out review page.
+ *
+ * @name Logged Out Review Page
+ * @route {GET} /reviewdetails/:id
+ */
 
 // new route for the reviewdetials handlebar for logged out users
 router.get('/reviewdetails/:id', async ctx => {
@@ -57,7 +66,6 @@ router.get('/reviewdetails/:id', async ctx => {
 	}
 })
 
-
 /**
  * The user registration page.
  *
@@ -73,6 +81,7 @@ router.get('/register', async ctx => await ctx.render('register'))
  * @name Register Script
  * @route {POST} /register
  */
+
 router.post('/register', async ctx => {
 	const account = await new Accounts(dbName)
 	try {
@@ -89,11 +98,25 @@ router.post('/register', async ctx => {
 	}
 })
 
+/**
+ * The Login page.
+ *
+ * @name Login Page
+ * @route {GET} /login
+ */
+
 // route for the login handlebar
 router.get('/login', async ctx => {
 	console.log(ctx.hbs)
 	await ctx.render('login', ctx.hbs)
 })
+
+/**
+ * The script to process a login.
+ *
+ * @name Login Script
+ * @route {POST} /login
+ */
 
 // new route to post and process the data entered by the user
 router.post('/login', async ctx => {
@@ -115,6 +138,13 @@ router.post('/login', async ctx => {
 		account.close()
 	}
 })
+
+/**
+ * The Logout page.
+ *
+ * @name Logout Page
+ * @route {GET} /logout
+ */
 
 // route to log out the user
 router.get('/logout', async ctx => {
