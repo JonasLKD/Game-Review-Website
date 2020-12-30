@@ -32,6 +32,44 @@ class Accounts {
 	}
 
 	/**
+	 * Accounts database initialisation
+	 *
+	 * @async
+	 * @function initAccounts
+	 * @returns {Boolean} returns true if sql command is read successfully
+	 */
+
+	async initAccounts() {
+		const sql = 'SELECT * FROM users;'
+		const accountsEmpty = await this.db.get(sql)
+		if (accountsEmpty === undefined) {
+			// another async function used so that the same passwords have different bcrypt hashes
+
+			/**
+			 * Encrypts passwords
+			 *
+			 * @async
+			 * @function passEncrypt
+			 * @param {String} password parameter will take in passwords passed as arguments
+			 * @returns {String} returns the password that is encrypted into a hash
+			 */
+
+			async function passEncrypt(pass) {
+				const passw = await bcrypt.hash(pass, saltRounds)
+				return passw
+			}
+			const sqlInsert = `INSERT INTO users(user, pass, email)VALUES 
+												("user1", "${await passEncrypt('p455w0rd')}", "user1@gmail.com"),\
+												("user2", "${await passEncrypt('p455w0rd')}", "user2@gmail.com"),\
+												("user3", "${await passEncrypt('p455w0rd')}", "user3@gmail.com");`
+			console.log('Table empty.')
+			this.db.run(sqlInsert)
+			return true
+		}
+		console.log('Table not empty.')
+	}
+
+	/**
 	 * registers a new user
 	 *
 	 * @async
@@ -65,7 +103,7 @@ class Accounts {
 	 * @function login
 	 * @param {String} username the username to check
 	 * @param {String} password the password to check
-	 * @returns {Boolean} returns true if credentials are valid
+	 * @returns {Number} returns record.id if everything passes
 	 */
 
 	async login(username, password) {

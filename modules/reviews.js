@@ -3,6 +3,8 @@
 
 // using sqlite to allow the use of sql commands through javascript
 import sqlite from 'sqlite-async'
+// using fs to allow reading text files
+import fs from 'fs-extra'
 
 /**
  * Reviews
@@ -39,6 +41,27 @@ class Reviews {
 			await this.db.run(sql2)
 			return this
 		})()
+	}
+
+	/**
+	 * Games database initialisation
+	 * @async
+	 * @function initGames
+	 * @returns {Boolean} returns true if sql command is read successfully
+	 */
+
+	async initReviews() {
+		const sql = 'SELECT * FROM reviews;'
+		const reviewsEmpty = await this.db.get(sql)
+		if (reviewsEmpty === undefined) {
+			console.log('Table empty.')
+			await fs.readFile('DBinit/reviews_sql_insert.txt', 'utf-8', (err, data) => {
+				if (err) throw err
+				this.db.run(data)
+				return true
+			})
+		}
+		console.log('Table not empty.')
 	}
 
 	/**
@@ -89,7 +112,7 @@ class Reviews {
 			for(const i in reviewtag) {
 				// console.log(reviewtag[i].userid, currentUser)
 				if(reviewtag[i].userid === currentUser) {
-					console.log('already reviewed')
+					console.log('Already reviewed')
 					return 'detailedreviewOUT'
 				} else {
 					console.log('not reviewed')
@@ -138,5 +161,5 @@ class Reviews {
 	}
 }
 
-// exported to allow Reviews to be used elsewhere such as gamesreviews.js
+// exported to allow Reviews to be used elsewhere such as public.js and gamesreviews.js
 export default Reviews

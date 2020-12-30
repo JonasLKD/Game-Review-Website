@@ -33,15 +33,24 @@ then
 	exit 1
 fi
 
-#eslint=`./node_modules/.bin/eslint .`
-#echo "$(./node_modules/.bin/eslint .)"
-#if [[ $($eslint -A) ]]
-#then
-#	echo "You don't have problems in code."
-	#exit 1
-#else
-#	echo "You have problems in code"
-#fi
+echo && echo -e "\033[1;33mCode Quality Checks.\033[0m"
+
+# if eslint returns a warning/error the githook will exit with a non zero status
+echo && echo "Running lint checks..."
+./node_modules/.bin/eslint . || exit 1
+# informs user in green text that code has passed linting
+echo -e "\033[0;32mNo linting warnings/errors.\033[0m"
+
+# if unit testing fails githook will exit with a non zero status, npm test already
+# tells the user what has failed
+echo && echo "Running unit tests..."
+npm run test || exit 1
+
+# see above etc
+echo && echo "Running JSDocs tool..."
+npm run jsdoc
+# informs user in green text that JSDoc has been generated
+echo -e "\033[0;32mJSDocs successfully generated. \033[0m"
 
 # checks if the user is trying to merge a branch into the master branch
 branch="$(git rev-parse --abbrev-ref HEAD)"

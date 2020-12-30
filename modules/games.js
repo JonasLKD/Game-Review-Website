@@ -5,7 +5,7 @@
 import sqlite from 'sqlite-async'
 // using mime to allow the use of microtime stamp
 import mime from 'mime-types'
-// using fs to allow copying files to directories
+// using fs to allow copying files to directories and reading text files
 import fs from 'fs-extra'
 
 /**
@@ -40,9 +40,12 @@ class Games {
 			return this
 		})()
 	}
-	
+
 	/**
-	 * Initialisation
+	 * Games database initialisation
+	 * @async
+	 * @function initGames
+	 * @returns {Boolean} returns true if sql command is read successfully
 	 */
 
 	async initGames() {
@@ -152,5 +155,5 @@ class Games {
 	}
 }
 
-// exported to allow Games to be used elsewhere such as gamesreviews.js
+// exported to allow Games to be used elsewhere such as public.js and gamesreviews.js
 export default Games

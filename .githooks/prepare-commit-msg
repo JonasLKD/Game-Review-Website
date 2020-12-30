@@ -12,7 +12,7 @@ echo "PREPARE-COMMIT-MSG"
 
 COMMIT_MSG_FILE=$1
 
-echo "DO NOT LEAVE NONE OF THE COMMIT SECTIONS EMPTY."
+echo -e "\033[1;33mDO NOT LEAVE ANY OF THE MESSAGE SECTIONS EMPTY.\033[0m"
 echo
 read -p "Enter summary of commit: " summary < /dev/tty
 # checking if the summary section empty by using the -z flag 
