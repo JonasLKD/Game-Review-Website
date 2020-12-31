@@ -1,0 +1,16 @@
+INSERT INTO reviews(userid, gamesid, review, date)
+VALUES (1, 1, "I love assassin's creed especially because it is based in the Viking era. The fighting gameplay is fun, you would never get bored trust me.", "20/12/2020"),
+(1, 2, "Watch dogs is so much fun. Everything is hackable which is great with endless possibilities. It's set in London which is a bonus.", "21/12/2020"),
+(1, 3, "Not really a fan of first-person shooters, but the story was interesting.", "20/12/2020"),
+(1, 4, "EA release the same game every year, literally, only the players and kits are updated. Everything else is the same...", "19/12/2020"),
+(1, 5, "Rockstar has produced the game of the decade. This was fantastic to play through the story, game mechanics and graphics produced perfection.", "20/12/2020"),
+(2, 1, "The game was alright, I like the gameplay but the story could have done more work. It didn't flow as well as the others.", "23/12/2020"),
+(2, 2, "Huge fan of the watch dogs franchise, the story was bang on.", "23/12/2020"),
+(2, 3, "Blacks ops was alright but I personally think Modern Warfare was better. Maybe next time I guess. Gameplay seems different from the other black ops at least.", "22/12/2020"),
+(2, 4, "I love this game. My favourite team is Bayern Munich.", "24/12/2020"),
+(2, 5, "You gotta love the wild west mann. Arthur Morgan, the main character is the best-developed character I've seen", "25/12/2020"),
+(3, 1, "Valhalla is very similar to origins and Odessey I like this. I also like how they kept the option to either play as a female or male main character.", "26/12/2020"),
+(3, 2, "Graphics were good but I've seen better. Ubisoft is getting better with them.", "26/12/2020"),
+(3, 3, "I usually prefer battlefield but this seems good so far. I really like the graphics and smooth framerate.", "29/12/2020"),
+(3, 4, "Ohhh I see that the AI's have gotten smarter. There are more clever plays being done on the pitch now compared to FIFA 20.", "28/12/2020"),
+(3, 5, "Now when comparing this to Grand Theft Auto V, rockstar has put in so much more work like environment design. Now we can see what they can produce. Red Dead was a blast. Can't wait for multiplayer.", "27/12/2020");

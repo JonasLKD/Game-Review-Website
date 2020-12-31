@@ -4,25 +4,43 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Home Page</title>
-		<meta name="description" content="form to add new books">
+		<title>Game Reviews</title>
+		<meta name="description" content="home page for logged in users">
 		<meta name="author" content="Mark Tyers">
 		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
 		<script type="module" src="main.js"></script>
 	</head>
 	<body>
 		<header>
-		<h1>Secure Page</h1>
-		<a href="/logout">Log out</a>
+			<a class="logo" href="/gamereviews"><img class="logo_img" src="/logo.png" /></a>
+			<h1>Game Reviews</h1>
+			<a href="/logout">Log out</a>
+			<p><span class="bold">Welcome, </span>{{user}}</p>
 		</header>
 		{{#if msg}}
  			<aside>
 				<p class="msg">{{msg}}</p>
 			</aside>
 		{{/if}}
-		<main>
-		<p>This is a secure page. Users need to have a valid account and be logged in to see it.</p>
-		<p><a href="/">Home page</a></p>
+		<main class="horizontal-scroll main_home">
+			<div class="parent">
+				{{#each records}}
+				<div class="item">
+					<div class="d1">
+						<a href="/gamereviews/reviewdetails/{{this.id}}"><img src="images/{{this.thumbnail}}" alt="Game Cover" class="click_img"></a>
+					</div>
+					<div class="d2">
+						<p class="bold"><a href="/gamereviews/reviewdetails/{{this.id}}">{{this.game}}</a></p>
+						<p>{{this.publisher}}</p>
+						<p>{{this.release_year}}</p>
+					</div>
+				</div>
+				{{/each}}
+			</div>
 		</main>
+		<a class="add button_addgame" href="/gamereviews/addgame">Add Game</a>
+		<footer>
+			<p>Made by Jonas Djondo</p>
+		</footer>
 	</body>
 </html>

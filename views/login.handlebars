@@ -5,30 +5,31 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Log In</title>
-		<meta name="description" content="form to add new books">
+		<meta name="description" content="form to login">
 		<meta name="author" content="Mark Tyers">
 		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
 		<script type="module" src="main.js"></script>
 	</head>
 	<body>
 		<header>
-		<h1>Log In</h1>
-		<a href="/register">Register</a>
+			<a class="logo" href="/"><img class="logo_img" src="/logo.png" /></a>
+			<h1>Log In</h1>
+			<a href="/register">Register</a>
 		</header>
 		{{#if msg}}
  			<aside>
 				<p class="msg">{{msg}}</p>
 			</aside>
 		{{/if}}
-		<main>
+		<main class="main_log_reg">
 		<form action="/login" method="post">
 			<p>
 				<label for="user">Username</label><br />
-				<input type="text" name="user" placeholder="your username" value="{{body.user}}" autofocus>
+				<input type="text" name="user" placeholder="Username" value="{{body.user}}" autofocus>
 			</p>
 			<p>
 				<label for="pass">Password</label><br />
-				<input type="password" name="pass" placeholder="your password" value="{{body.pass}}">
+				<input type="password" name="pass" placeholder="Password" value="{{body.pass}}">
 			</p>
 			<input type="hidden" name="referrer" value="{{referrer}}">
 			<p><input type="submit" value="Log in"></p>
@@ -36,4 +37,7 @@
 		<p><a href="/">Home page</a></p>
 		</main>
 	</body>
+	<footer>
+		<p>Made by Jonas Djondo</p>
+	</footer>
 </html>

@@ -1,7 +1,9 @@
 
 /** @module Accounts */
 
+// using bcrypt to allow passwords to stored in the database securely
 import bcrypt from 'bcrypt-promise'
+// using sqlite to allow the use of sql commands through javascript
 import sqlite from 'sqlite-async'
 
 const saltRounds = 10
@@ -10,11 +12,14 @@ const saltRounds = 10
  * Accounts
  * ES6 module that handles registering accounts and logging in.
  */
+
 class Accounts {
+
 	/**
-   * Create an account object
+   * Creating an accounts object
    * @param {String} [dbName=":memory:"] - The name of the database file to use.
    */
+
 	constructor(dbName = ':memory:') {
 		return (async() => {
 			this.db = await sqlite.open(dbName)
@@ -27,12 +32,54 @@ class Accounts {
 	}
 
 	/**
+	 * Accounts database initialisation
+	 *
+	 * @async
+	 * @function initAccounts
+	 * @returns {Boolean} returns true if sql command is read successfully
+	 */
+
+	async initAccounts() {
+		const sql = 'SELECT * FROM users;'
+		const accountsEmpty = await this.db.get(sql)
+		if (accountsEmpty === undefined) {
+			// another async function used so that the same passwords have different bcrypt hashes
+
+			/**
+			 * Encrypts passwords
+			 *
+			 * @async
+			 * @function passEncrypt
+			 * @param {String} password parameter will take in passwords passed as arguments
+			 * @returns {String} returns the password that is encrypted into a hash
+			 */
+
+			async function passEncrypt(pass) {
+				const passw = await bcrypt.hash(pass, saltRounds)
+				return passw
+			}
+			const sqlInsert = `INSERT INTO users(user, pass, email)VALUES 
+												("user1", "${await passEncrypt('p455w0rd')}", "user1@gmail.com"),\
+												("user2", "${await passEncrypt('p455w0rd')}", "user2@gmail.com"),\
+												("user3", "${await passEncrypt('p455w0rd')}", "user3@gmail.com");`
+			console.log('Table empty.')
+			this.db.run(sqlInsert)
+			return true
+		}
+		console.log('Table not empty.')
+	}
+
+	/**
 	 * registers a new user
+	 *
+	 * @async
+	 * @function register
 	 * @param {String} user the chosen username
 	 * @param {String} pass the chosen password
 	 * @param {String} email the chosen email
 	 * @returns {Boolean} returns true if the new user has been added
 	 */
+
 	async register(user, pass, email) {
 		Array.from(arguments).forEach( val => {
 			if(val.length === 0) throw new Error('missing field')
@@ -51,20 +98,33 @@ class Accounts {
 
 	/**
 	 * checks to see if a set of login credentials are valid
+	 *
+	 * @async
+	 * @function login
 	 * @param {String} username the username to check
 	 * @param {String} password the password to check
-	 * @returns {Boolean} returns true if credentials are valid
+	 * @returns {Number} returns record.id if everything passes
 	 */
+
 	async login(username, password) {
 		let sql = `SELECT count(id) AS count FROM users WHERE user="${username}";`
 		const records = await this.db.get(sql)
 		if(!records.count) throw new Error(`username "${username}" not found`)
-		sql = `SELECT pass FROM users WHERE user = "${username}";`
+		// retrieves the id and password
+		sql = `SELECT id, pass FROM users WHERE user = "${username}";`
 		const record = await this.db.get(sql)
 		const valid = await bcrypt.compare(password, record.pass)
 		if(valid === false) throw new Error(`invalid password for account "${username}"`)
-		return true
+		// returns the id from the record
+		return record.id
 	}
+
+	/**
+	 * closes the database
+	 *
+	 * @async
+	 * @function close
+	 */
 
 	async close() {
 		await this.db.close()

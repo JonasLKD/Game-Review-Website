@@ -1,0 +1,11 @@
+INSERT INTO games(userid, game, publisher, release_year, thumbnail, summary)
+VALUES (1, "Assassin's Creed Valhalla", "Ubisoft", 2020, "assassins_creed.JPEG",
+"In Assassin's Creed Valhalla, become Eivor, a mighty Viking raider and lead your clan from the harsh shores of Norway to a new home amid the lush farmlands of ninth-century England."),
+(1, "Watch Dogs: Legion", "Ubisoft", 2020, "watch_dogs.JPEG",
+"In Watch Dogs Legion, build a resistance from virtually anyone you see as you hack, infiltrate, and fight to take back a near-future London that is facing its downfall. Welcome to the Resistance."),
+(1, "Call of Duty: Black Ops Cold War", "Activision", 2020, "cod_cold_war.JPEG",
+"Call of Duty Black Ops Cold War -- the direct sequel to the original and fan-favorite Call of Duty: Black Ops -- drops fans into the depths of the Cold War’s volatile geopolitical battle of the early 1980s."),
+(1, "FIFA 21", "EA Sports", 2020, "fifa_21.JPEG",
+"Win as One in FIFA 21. Whether it's on the streets or in the stadium, FIFA 21 has more ways to play than ever before -- including the UEFA Champions League and CONMEBOL Libertadores."),
+(1, "Red Dead Redemption 2", "Rockstar Games", 2018, "red_dead_2.JPEG",
+"Red Dead Redemption 2 is an epic tale of life in America’s unforgiving heartland. The game's vast and atmospheric world also provides the foundation for a brand new online multiplayer experience.");

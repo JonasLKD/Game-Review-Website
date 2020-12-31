@@ -1,0 +1,87 @@
+#!/bin/bash
+
+#
+# Pre-commit hook script to verify email and check if the user
+# is trying to commit to the master branch. Called by "git commit"
+# with no arguments.
+#
+
+set -e # using the options command to abort script at first error
+echo
+echo "PRE-COMMIT"
+
+# gets current branch then displays it on the console
+CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+echo "current branch: ${CURRENT_BRANCH}"
+
+# gets the user's email then displays it on the console
+EMAIL=$(git config user.email)
+echo "registered email: ${EMAIL}"
+
+# checks if the user's email contains @covetry.ac.uk
+if [[ $EMAIL != *"@coventry.ac.uk" ]]; 
+# if not the message below will be displayed 
+then
+	echo "  invalid config settings"
+	echo "  Your registered email is currently '$EMAIL'"
+	echo "  please run the following git commands:"
+	echo "    $ git config user.email xxx@coventry.ac.uk"
+	echo "    $ git config user.name 'zzz'"
+	echo "  where 'xxx' is your university username"
+	echo "  and 'zzz' is your name as it appears on your university ID badge"
+	echo
+	exit 1
+fi
+
+echo && echo -e "\033[1;33mCode Quality Checks.\033[0m"
+
+# if eslint returns a warning/error the githook will exit with a non zero status
+echo && echo "Running lint checks..."
+./node_modules/.bin/eslint . || exit 1
+# informs user in green text that code has passed linting
+echo -e "\033[0;32mNo linting warnings/errors.\033[0m"
+
+# if unit testing fails githook will exit with a non zero status, npm test already
+# tells the user what has failed
+echo && echo "Running unit tests..."
+npm run test || exit 1
+
+# see above etc
+echo && echo "Running JSDocs tool..."
+npm run jsdoc
+# informs user in green text that JSDoc has been generated
+echo -e "\033[0;32mJSDocs successfully generated. \033[0m"
+
+# checks if the user is trying to merge a branch into the master branch
+branch="$(git rev-parse --abbrev-ref HEAD)"
+# checks if 'merge' is the 2nd command after git
+if [[ $2 == 'merge' ]];
+then
+# if so a message will be displayed
+	echo "merging branch"
+	# displays message below informing the user the correct way to
+	# merge into the master branch
+	if [[ "$branch" == "master" ]]; then
+		echo "  trying to merge into the 'master' branch"
+		echo "  you should push the local branch to GitHub"
+		echo "  and merge to master using a pull request"
+		echo
+		exit 1
+	fi
+fi
+
+# checks if the user is trying to commit to the master branch
+if [ "$branch" = "master" ];
+# if so a prompt will be displayed to confirm that user wants to proceed with this
+then
+	read -p "  You are about to commit to the master branch, are you sure? [y|n] " -n 1 -r < /dev/tty
+	echo
+	# checking if the user entered a Y/y
+	if echo $REPLY | grep -E '^[Yy]$' > /dev/null
+	then
+	# commit will be executed
+		exit 0
+	fi
+	# commit will not executed
+	exit 1
+fi

@@ -1,0 +1,41 @@
+#!/bin/bash
+
+#
+# Prepare commit message hook script prompts the user to enter a commit.
+# Called by "git commit" with no arguments. The hook should exit with
+# non-zero status when all sections are filled in.
+#
+
+set -e # abort script at first error
+echo
+echo "PREPARE-COMMIT-MSG"
+
+COMMIT_MSG_FILE=$1
+
+echo -e "\033[1;33mDO NOT LEAVE ANY OF THE MESSAGE SECTIONS EMPTY.\033[0m"
+echo
+read -p "Enter summary of commit: " summary < /dev/tty
+# checking if the summary section empty by using the -z flag 
+if [ -z "$summary" ] 
+# if so a message will be displayed and the commit will exit with a non zero status
+then
+	echo "Summary cannot be empty"
+	exit 1
+fi
+#see above
+read -p "Enter why changes were made for commit: " changes < /dev/tty
+if [ -z "$changes" ] 
+# see above
+then
+	echo "Changes cannot be empty"
+	exit 1
+fi
+read -p "Enter details of changes for commit: " details < /dev/tty
+if [ -z "$details" ] 
+then
+	echo "Details cannot be empty"
+	exit 1
+fi
+
+# when all if statements are passed, the message sections will be stored on COMMIT_MSG_FILE
+echo -e "$summary \n $changes \n $details" > "$COMMIT_MSG_FILE"

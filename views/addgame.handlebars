@@ -1,0 +1,57 @@
+
+<!doctype html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Add Game</title>
+		<meta name="description" content="form to a new game">
+		<meta name="author" content="Mark Tyers">
+		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+		<script type="module" src="{{host}}/main.js"></script>
+	</head>
+	<body>
+		<header>
+			<a class="logo" href="/gamereviews"><img class="logo_img" src="/logo.png" /></a>
+			<h1>Add Game</h1>
+			<a href="/logout">Log out</a>
+			<p><span class="bold">Welcome, </span>{{user}}</p>
+		</header>
+		{{#if msg}}
+ 			<aside>
+				<p class="msg">{{msg}}</p>
+			</aside>
+		{{/if}}
+		<main>
+			<form method="post" action="/gamereviews/addgame" enctype="multipart/form-data">
+				<p>
+					<label class="bold" for="game">Game Title</label><br />
+					<input type="text" name="game" placeholder="e.g. The Last of Us" value="" data-msg="Please enter a Game Title" autofocus required />
+				</p>
+				<p>
+					<label class="bold" for="publisher">Publisher</label><br />
+					<input type="text" name="publisher" placeholder="e.g. Naughty Dogs" data-msg="Please enter a Publisher" required />
+				</p>
+				<p>
+					<label class="bold" for="release_year">Release Year</label><br />
+					<input type="number" name="release_year" placeholder="e.g. 2013" min="1940" max="2021" data-msg="Please enter the Release Year" required />
+				</p>
+				<p>
+					<label class="bold" for="thumbnail">Game Cover</label><br />
+					<input type="file" name="thumbnail" accept="image/*" class="button_file" />
+				</p>
+				<p>
+					<label class="bold" for="summary">Summary</label><br />
+					<textarea name="summary" placeholder="Type summary here..." data-msg="Please enter a Summary" required></textarea>
+				</p>
+				<p><input type="submit" value="Add Game"></p>
+			</form>
+		</main>
+		<main>
+			<button class="back button">Back</button>
+		</main>
+		<footer>
+			<p>Made by Jonas Djondo</p>
+		</footer>
+	</body>
+</html>

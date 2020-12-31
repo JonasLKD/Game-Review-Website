@@ -1,0 +1,70 @@
+
+<!doctype html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>{{game.game}} Review</title>
+		<meta name="description" content="displays reviews for logged in users">
+		<meta name="author" content="Mark Tyers">
+		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+		<script type="module" src="{{host}}/main.js"></script>
+	</head>
+	<body>
+		<header>
+			<a class="logo" href="/gamereviews"><img class="logo_img" src="/logo.png" /></a>
+			<h1>Games Review</h1>
+			<a href="/logout">Log out</a>
+			<p><span class="bold">Welcome, </span>{{user}}</p>
+		</header>
+		{{#if msg}}
+ 			<aside>
+				<p class="msg">{{msg}}</p>
+			</aside>
+		{{/if}}
+	<main>
+		<div class="grid-container">
+			<div class="div1">
+				<img src="{{host}}/images/{{game.thumbnail}}" />
+			</div>
+			<div class="div2">
+				<h2>{{game.game}}</h2>
+				<p class="pText"><span class="bold">Summary:</span> <span>{{game.summary}}</span></p>
+			</div>
+			<div class="div3">
+				<p><span class="bold">Publisher:</span> <span>{{game.publisher}}</span></p> 
+				<p><span class="bold">Release Year:</span> <span>{{game.release_year}}</span></p>
+			</div>
+		</div>
+	</main>	
+		<main class="main_reviewbox">
+			<form method="post" action="/gamereviews/reviewdetails/:id" enctype="multipart/form-data">
+				<p>
+					<label class="bold" for="review">Add Your Review</label><br />
+					<textarea class="reviewtextbox" name="review" placeholder="Post a review" data-msg="Review cannot be empty" required></textarea>
+				</p>
+				<p><input type="submit" value="Add Review"></p>
+			</form>
+		</main>
+		<main>
+			<h3>Reviews</h3>
+			{{#each reviewtag}}
+			<div class="grid-container_2">
+				<div class="div1">
+					<p><span class="bold">{{this.user}}</span></p>
+					<p>{{this.review}}</p>
+				</div>
+				<div class="div2_2">
+					<p><span class="bold">{{this.date}}</span></p>
+				</div>
+			</div>
+			{{/each}}
+		</main>
+		<main>
+			<button class="back button">Back</button>
+		</main>
+		<footer>
+			<p>Made by Jonas Djondo</p>
+		</footer>
+	</body>
+</html>

@@ -2,13 +2,15 @@
 import test from 'ava'
 import Accounts from '../modules/accounts.js'
 
+/* should register and log in with a valid account */
 test('REGISTER : register and log in with a valid account', async test => {
 	test.plan(1)
 	const account = await new Accounts() // no database specified so runs in-memory
 	try {
 		await account.register('doej', 'password', 'doej@gmail.com')
 	  const login = await account.login('doej', 'password')
-		test.is(login, true, 'unable to log in')
+		// login function returns a record.id that is number datatype
+		test.is(typeof login, 'number', 'unable to log in')
 	} catch(err) {
 		test.fail('error thrown')
 	} finally {
@@ -16,6 +18,7 @@ test('REGISTER : register and log in with a valid account', async test => {
 	}
 })
 
+/* should attempt to register a duplicate username */
 test('REGISTER : register a duplicate username', async test => {
 	test.plan(1)
 	const account = await new Accounts()
@@ -30,6 +33,7 @@ test('REGISTER : register a duplicate username', async test => {
 	}
 })
 
+/* should attempt to register with a blank username */
 test('REGISTER : error if blank username', async test => {
 	test.plan(1)
 	const account = await new Accounts()
@@ -43,6 +47,7 @@ test('REGISTER : error if blank username', async test => {
 	}
 })
 
+/* should attempt to register with a blank password */
 test('REGISTER : error if blank password', async test => {
 	test.plan(1)
 	const account = await new Accounts()
@@ -56,6 +61,7 @@ test('REGISTER : error if blank password', async test => {
 	}
 })
 
+/* should attempt to register with a blank email */
 test('REGISTER : error if blank email', async test => {
 	test.plan(1)
 	const account = await new Accounts()
@@ -69,6 +75,7 @@ test('REGISTER : error if blank email', async test => {
 	}
 })
 
+/* should attempt to register with a duplicate email */
 test('REGISTER : error if duplicate email', async test => {
 	test.plan(1)
 	const account = await new Accounts()
@@ -83,6 +90,7 @@ test('REGISTER : error if duplicate email', async test => {
 	}
 })
 
+/* should attempt to login with a username that is not stored in the database */
 test('LOGIN    : invalid username', async test => {
 	test.plan(1)
 	const account = await new Accounts()
@@ -97,6 +105,7 @@ test('LOGIN    : invalid username', async test => {
 	}
 })
 
+/* should attempt to login with a password not linked the username entered */
 test('LOGIN    : invalid password', async test => {
 	test.plan(1)
 	const account = await new Accounts()
