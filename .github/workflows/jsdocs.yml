@@ -1,0 +1,27 @@
+
+# .github/workflows/jsdocs.yml
+
+name: JSDocs
+
+on:
+	# git action triggers when pushed or pulled to/from the branch
+  push:
+    branches: ['master']
+  pull_request:
+    branches: ['master']
+# pipleline job is called JSDoc
+jobs:
+  JSDoc:
+    runs-on: ubuntu-latest
+    steps:
+		# specifies which version of ubuntu
+      - uses: actions/checkout@v2
+      - name: Use NodeJS
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+			# description of command and running jsdocs
+      - name: install the jsdoc
+        run: npm install jsdoc
+      - name: run the jsdoc
+        run: ./node_modules/.bin/jsdoc . -d docs/jsdocs/
