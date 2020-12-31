@@ -4,7 +4,7 @@
 name: Linter
 
 on:
-	# git action triggers when pushed or pulled to/from the branch
+  # git action triggers when pushed or pulled to/from the branch
   push:
     branches: ['master']
   pull_request:
@@ -14,13 +14,13 @@ jobs:
   Linter:
     runs-on: ubuntu-latest
     steps:
-		# specifies which version of ubuntu
+      # specifies which version of ubuntu
       - uses: actions/checkout@v2
       - name: Use NodeJS
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
-			# description of command and running linter
+      # description of command and running linter
       - name: Installing linter
         run: npm install eslint
       - name: Running linter
