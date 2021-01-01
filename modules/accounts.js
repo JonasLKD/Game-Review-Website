@@ -25,7 +25,8 @@ class Accounts {
 			this.db = await sqlite.open(dbName)
 			// we need this table to store the user accounts
 			const sql = 'CREATE TABLE IF NOT EXISTS users\
-				(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, pass TEXT, email TEXT);'
+				(id INTEGER PRIMARY KEY AUTOINCREMENT, firstname TEXT, lastname TEXT, user TEXT,\
+				pass TEXT, email TEXT, picture TEXT);'
 			await this.db.run(sql)
 			return this
 		})()
@@ -58,10 +59,11 @@ class Accounts {
 				const passw = await bcrypt.hash(pass, saltRounds)
 				return passw
 			}
-			const sqlInsert = `INSERT INTO users(user, pass, email)VALUES 
-												("user1", "${await passEncrypt('p455w0rd')}", "user1@gmail.com"),\
-												("user2", "${await passEncrypt('p455w0rd')}", "user2@gmail.com"),\
-												("user3", "${await passEncrypt('p455w0rd')}", "user3@gmail.com");`
+			const sqlInsert = `INSERT INTO users(firstname, lastname, user, pass, email, picture)\
+			VALUES 
+			("John", "Smith", "user1", "${await passEncrypt('p455w0rd')}", "user1@gmail.com"),\
+			("Michael", "Brown", "user2", "${await passEncrypt('p455w0rd')}", "user2@gmail.com"),\
+			("Robert", "Davis", "user3", "${await passEncrypt('p455w0rd')}", "user3@gmail.com");`
 			console.log('Table empty.')
 			this.db.run(sqlInsert)
 			return true
@@ -80,18 +82,18 @@ class Accounts {
 	 * @returns {Boolean} returns true if the new user has been added
 	 */
 
-	async register(user, pass, email) {
+	async register(data) {
 		Array.from(arguments).forEach( val => {
 			if(val.length === 0) throw new Error('missing field')
 		})
-		let sql = `SELECT COUNT(id) as records FROM users WHERE user="${user}";`
-		const data = await this.db.get(sql)
-		if(data.records !== 0) throw new Error(`username "${user}" already in use`)
-		sql = `SELECT COUNT(id) as records FROM users WHERE email="${email}";`
+		let sql = `SELECT COUNT(id) as records FROM users WHERE user="${data.user}";`
+		const check = await this.db.get(sql)
+		if(check.records !== 0) throw new Error(`username "${data.user}" already in use`)
+		sql = `SELECT COUNT(id) as records FROM users WHERE email="${data.email}";`
 		const emails = await this.db.get(sql)
-		if(emails.records !== 0) throw new Error(`email address "${email}" is already in use`)
-		pass = await bcrypt.hash(pass, saltRounds)
-		sql = `INSERT INTO users(user, pass, email) VALUES("${user}", "${pass}", "${email}")`
+		if(emails.records !== 0) throw new Error(`email address "${data.email}" is already in use`)
+		const pass = await bcrypt.hash(data.pass, saltRounds)
+		sql = `INSERT INTO users(user, pass, email) VALUES("${data.user}", "${pass}", "${data.email}")`
 		await this.db.run(sql)
 		return true
 	}

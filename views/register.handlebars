@@ -4,7 +4,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Create an Account</title>
+		<title>Register an Account</title>
 		<meta name="description" content="form to add new books">
 		<meta name="author" content="Mark Tyers">
 		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
@@ -13,7 +13,7 @@
 	<body>
 		<header>
 			<a class="logo" href="/"><img class="logo_img" src="/logo.png" /></a>
-			<h1>Create an Account</h1>
+			<h1>Register an Account</h1>
 			<a href="/login">Log in</a>
 		</header>
 		{{#if msg}}
@@ -24,18 +24,30 @@
 		<main class="main_log_reg">
 		<form action="/register" enctype="multipart/form-data" method="post">
 			<p>
-				<label for="user">Username</label><br />
-				<input type="text" name="user" placeholder="e.g. JohnDoe35 (no spaces)" value="{{body.user}}">
+				<label class="bold" for="firstname">Firstname</label><br />
+				<input type="text" name="firstname" placeholder="e.g. John" value="{{body.firstname}}" pattern="[A-Za-z']+" data-msg="Please enter your firstname" autofocus required />
 			</p>
 			<p>
-				<label for="pass">Password</label><br />
-				<input type="password" name="pass" placeholder="Don't tell anyone" value="{{body.pass}}">
+				<label class="bold" for="lastname">Lastname</label><br />
+				<input type="text" name="lastname" placeholder="e.g. Doe" value="{{body.lastname}}" data-msg="Please enter your lastname" required />
 			</p>
 			<p>
-				<label for="email">Email</label><br />
-				<input type="email" name="email" placeholder="e.g. johndoe@gmail.com" value="{{body.email}}">
+				<label class="bold" for="user">Username</label><br />
+				<input type="text" name="user" placeholder="e.g. JohnDoe35 (no spaces)" value="{{body.user}}" data-msg="Please enter a username" required />
 			</p>
-			<p><input type="submit" value="Create"></p>
+			<p>
+				<label class="bold" for="pass">Password</label><br />
+				<input type="password" name="pass" placeholder="Don't tell anyone" value="{{body.pass}}" data-msg="Please enter a password" required />
+			</p>
+			<p>
+				<label class="bold" for="email">Email</label><br />
+				<input type="email" name="email" placeholder="e.g. johndoe@gmail.com" value="{{body.email}}" data-msg="Please enter an email" required />
+			</p>
+			<p>
+				<label class="bold" for="avatar">Profile Picture</label><br />
+				<input type="file" name="avatar" accept="image/*" class="button_file" />
+			</p>
+			<p><input type="submit" value="Register"></p>
 		</form>
 			<p><a href="/">Home page</a></p>
 		</main>
