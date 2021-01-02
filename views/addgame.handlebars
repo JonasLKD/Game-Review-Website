@@ -22,32 +22,32 @@
 				<p class="msg">{{msg}}</p>
 			</aside>
 		{{/if}}
-		<main>
+		<main class=main_log_reg_add>
 			<form method="post" action="/gamereviews/addgame" enctype="multipart/form-data">
 				<p>
-					<label class="bold" for="game">Game Title</label><br />
+					<label class="bold_white" for="game">Game Title</label><br />
 					<input type="text" name="game" placeholder="e.g. The Last of Us" value="" data-msg="Please enter a Game Title" autofocus required />
 				</p>
 				<p>
-					<label class="bold" for="publisher">Publisher</label><br />
+					<label class="bold_white" for="publisher">Publisher</label><br />
 					<input type="text" name="publisher" placeholder="e.g. Naughty Dogs" data-msg="Please enter a Publisher" required />
 				</p>
 				<p>
-					<label class="bold" for="release_year">Release Year</label><br />
+					<label class="bold_white" for="release_year">Release Year</label><br />
 					<input type="number" name="release_year" placeholder="e.g. 2013" min="1940" max="2021" data-msg="Please enter the Release Year" required />
 				</p>
 				<p>
-					<label class="bold" for="thumbnail">Game Cover</label><br />
+					<label class="bold_white" for="thumbnail">Game Cover</label><br />
 					<input type="file" name="thumbnail" accept="image/*" class="button_file" />
 				</p>
 				<p>
-					<label class="bold" for="summary">Summary</label><br />
+					<label class="bold_white" for="summary">Summary</label><br />
 					<textarea name="summary" placeholder="Type summary here..." data-msg="Please enter a Summary" required></textarea>
 				</p>
 				<p><input type="submit" value="Add Game"></p>
 			</form>
 		</main>
-		<main>
+		<main class=main_addgame_back>
 			<button class="back button">Back</button>
 		</main>
 		<footer>

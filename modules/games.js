@@ -63,7 +63,7 @@ class Games {
 	}
 
 	/**
-	 * retrieves and displays all games from database
+	 * Retrieves and displays all games from database
 	 *
 	 * @async
 	 * @function all
@@ -84,7 +84,7 @@ class Games {
 	}
 
 	/**
-	 * retrieves specified game which is determined by the parameter ID
+	 * Retrieves specified game which is determined by the parameter ID
 	 *
 	 * @async
 	 * @function getByIDGames
@@ -109,7 +109,7 @@ class Games {
 	}
 
 	/**
-	 * adds a game to the database
+	 * Adds a game to the database
 	 *
 	 * @async
 	 * @function add
@@ -126,7 +126,7 @@ class Games {
 			filename = `${Date.now()}.${mime.extension(data.fileType)}`
 			console.log(filename)
 			// the file will be copied into the images directory to be used later
-			await fs.copy(data.filePath, `public/images/${filename}`)
+			await fs.copy(data.filePath, `public/images-games/${filename}`)
 		}
 		try {
 			// data from form inserted into database
@@ -143,7 +143,7 @@ class Games {
 	}
 
 	/**
-	 * closes the database
+	 * Closes the database
 	 *
 	 * @async
 	 * @function close

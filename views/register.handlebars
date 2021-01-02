@@ -21,31 +21,35 @@
 				<p class="msg">{{msg}}</p>
 			</aside>
 		{{/if}}
-		<main class="main_log_reg">
+		<main class="main_log_reg_add">
 		<form action="/register" enctype="multipart/form-data" method="post">
 			<p>
-				<label class="bold" for="firstname">Firstname</label><br />
+				<label class="bold_white" for="firstname">Firstname</label><br />
 				<input type="text" name="firstname" placeholder="e.g. John" value="{{body.firstname}}" pattern="[A-Za-z']+" data-msg="Please enter your firstname" autofocus required />
 			</p>
 			<p>
-				<label class="bold" for="lastname">Lastname</label><br />
+				<label class="bold_white" for="lastname">Lastname</label><br />
 				<input type="text" name="lastname" placeholder="e.g. Doe" value="{{body.lastname}}" data-msg="Please enter your lastname" required />
 			</p>
 			<p>
-				<label class="bold" for="user">Username</label><br />
+				<label class="bold_white" for="user">Username</label><br />
 				<input type="text" name="user" placeholder="e.g. JohnDoe35 (no spaces)" value="{{body.user}}" data-msg="Please enter a username" required />
 			</p>
 			<p>
-				<label class="bold" for="pass">Password</label><br />
+				<label class="bold_white" for="pass">Password</label><br />
 				<input type="password" name="pass" placeholder="Don't tell anyone" value="{{body.pass}}" data-msg="Please enter a password" required />
 			</p>
 			<p>
-				<label class="bold" for="email">Email</label><br />
+				<label class="bold_white" for="email">Email</label><br />
 				<input type="email" name="email" placeholder="e.g. johndoe@gmail.com" value="{{body.email}}" data-msg="Please enter an email" required />
 			</p>
 			<p>
-				<label class="bold" for="avatar">Profile Picture</label><br />
+				<label class="bold_white" for="avatar">Profile Picture</label><br />
 				<input type="file" name="avatar" accept="image/*" class="button_file" />
+			</p>
+			<p>
+				<label class="bold_white" for="bio">Bio</label><br />
+				<textarea name="bio" placeholder="e.g. I like adventure games." data-msg="Please enter a bio" required></textarea>
 			</p>
 			<p><input type="submit" value="Register"></p>
 		</form>

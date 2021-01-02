@@ -1,0 +1,42 @@
+
+<!doctype html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Edit Review</title>
+		<meta name="description" content="form to a new game">
+		<meta name="author" content="Mark Tyers">
+		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+		<script type="module" src="{{host}}/main.js"></script>
+	</head>
+	<body>
+		<header>
+			<a class="logo" href="/gamereviews"><img class="logo_img" src="/logo.png" /></a>
+			<h1>Edit Review</h1>
+			<a href="/logout">Log out</a>
+			<p><span class="bold">Welcome, </span>{{user}}</p>
+		</header>
+		{{#if msg}}
+ 			<aside>
+				<p class="msg">{{msg}}</p>
+			</aside>
+		{{/if}}
+		<main class=main_log_reg_add>
+			<form method="post" action="/gamereviews/editreview/:id" enctype="multipart/form-data">
+				<h3 class="p_center">{{selectedReview.game}}</h3>
+				<p class="p_center">
+					<label class="bold_white" for="review">Review</label><br />
+					<textarea class="textarea_editreview" name="review" data-msg="Review cannot be left empty" required>{{selectedReview.review}}</textarea>
+				</p>
+				<p class="p_center"><input type="submit" value="Edit Review"></p>
+			</form>
+		</main>
+		<main class=main_addgame_back>
+			<button class="back button">Back</button>
+		</main>
+		<footer>
+			<p>Made by Jonas Djondo</p>
+		</footer>
+	</body>
+</html>

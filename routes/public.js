@@ -85,6 +85,11 @@ router.get('/register', async ctx => await ctx.render('register'))
 router.post('/register', async ctx => {
 	const account = await new Accounts(dbName)
 	try {
+		if(ctx.request.files.thumbnail.name) {
+			ctx.request.body.filePath = ctx.request.files.thumbnail.path
+			ctx.request.body.fileName = ctx.request.files.thumbnail.name
+			ctx.request.body.fileType = ctx.request.files.thumbnail.type
+		}
 		// call the register function from account.js
 		await account.register(ctx.request.body) //edited
 		ctx.redirect(`/login?msg=New user "${ctx.request.body.user}" added, you need to log in`)

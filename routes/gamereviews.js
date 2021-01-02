@@ -9,6 +9,7 @@ const router = new Router({ prefix: '/gamereviews' })
 // as well as the website.db database
 import Games from '../modules/games.js'
 import Reviews from '../modules/reviews.js'
+import Accounts from '../modules/accounts.js'
 const dbName = 'website.db'
 
 /**
@@ -32,7 +33,7 @@ async function checkAuth(ctx, next) {
 router.use(checkAuth)
 
 /**
- * The Logged in home page.
+ * The Logged in home page
  *
  * @name Logged In Home Page
  * @route {GET} /
@@ -43,13 +44,12 @@ router.get('/', async ctx => {
 	// created games object
 	const games = await new Games(dbName)
 	try {
-		// calls the records of games
+		// retrieves all games in the database
 		const records = await games.all()
 		// prints out the records in the terminal
 		console.log(records)
-		// records property added
+		// records property added and will passed onto the gamereview handlebar
 		ctx.hbs.records = records
-		// object is passed onto the gamereview page template
 		await ctx.render('gamereviews', ctx.hbs)
 	} catch(err) {
 		ctx.hbs.error = err.message
@@ -58,13 +58,83 @@ router.get('/', async ctx => {
 })
 
 /**
- * The Logged in review page.
+ * The profile page
+ *
+ * @name Profile Page
+ * @route {GET} /profile
+ */
+
+router.get('/profile', async ctx => {
+	// created accounts and reviews object
+	const accounts = await new Accounts(dbName)
+	// const reviews = await new Reviews(dbName)
+	try {
+		ctx.request.body.account = ctx.session.userid
+		// retrieves account info
+		const accountInfo = await accounts.relativeAccounts(ctx.session.userid)
+		// retrieves all reviews of current user
+		const accReviews = await accounts.accountReviews(ctx.session.userid)
+		// info property added and will be passed onto the profile handlebar
+		ctx.hbs.info = accountInfo
+		ctx.hbs.accRev = accReviews
+		console.log(accountInfo)
+		console.log(accReviews)
+		// console.log(ctx.hbs)
+		await ctx.render('profile', ctx.hbs)
+	} catch(err) {
+		ctx.render('error', ctx.hbs)
+	}
+})
+
+/**
+ *
+ * @name Edit Review Page
+ * @route {GET} /editreview/:id
+ */
+
+router.get('/editreview/:id', async ctx => {
+	const reviews = await new Reviews(dbName)
+	try {
+		const selectedReview = await reviews.chosenReview(ctx.params.id)
+		ctx.hbs.selectedReview = selectedReview
+		console.log(selectedReview)
+		ctx.session.reviewid = selectedReview.gamesid
+		await ctx.render('editreview', ctx.hbs)
+		return ctx.session.reviewid
+	} catch(err) {
+		console.log(err)
+		await ctx.render('error', ctx.hbs)
+	}
+})
+
+/**
+ * The script to process editing a review
+ *
+ * @name Edit a Review Script
+ * @route {POST} /editreview/:id
+ */
+
+router.post('/editreview/:id', async ctx => {
+	try {
+		ctx.request.body.reviewid = ctx.session.reviewid
+		const reviews = await new Reviews(dbName)
+		await reviews.editReview(ctx.request.body)
+		return ctx.redirect('/gamereviews/profile?msg=Review edited')
+	} catch(err) {
+		console.log(err)
+		await ctx.render('error', ctx.hbs)
+	}
+
+})
+
+/**
+ * The Logged in review page
  *
  * @name Logged In Review Page
  * @route {GET} /reviewdetails/:id
  */
 
-// new route for the reviewdetials handlebar for logged in users
+// new route for the reviewdetails handlebar for logged in users
 router.get('/reviewdetails/:id', async ctx => {
 	const games = await new Games(dbName)
 	const reviews = await new Reviews(dbName)
@@ -91,7 +161,7 @@ router.get('/reviewdetails/:id', async ctx => {
 })
 
 /**
- * The script to process adding a review.
+ * The script to process adding a review
  *
  * @name Add Review Script
  * @route {POST} /reviewdetails/:id

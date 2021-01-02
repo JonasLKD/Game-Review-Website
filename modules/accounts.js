@@ -5,8 +5,26 @@
 import bcrypt from 'bcrypt-promise'
 // using sqlite to allow the use of sql commands through javascript
 import sqlite from 'sqlite-async'
+// using mime to allow the use of microtime stamp
+import mime from 'mime-types'
+// using fs to allow copying files to directories and reading text files
+import fs from 'fs-extra'
 
 const saltRounds = 10
+
+/**
+ * Checks for undefined object properties
+ * function strictly only used for unit testing
+ *
+ * @function missingChecker
+ * @param {Object} paramter data for register data
+ */
+
+function missingChecker(data) {
+	for(const i in data) {
+		if(!data[i]) throw new Error('missing field')
+	}
+}
 
 /**
  * Accounts
@@ -25,8 +43,8 @@ class Accounts {
 			this.db = await sqlite.open(dbName)
 			// we need this table to store the user accounts
 			const sql = 'CREATE TABLE IF NOT EXISTS users\
-				(id INTEGER PRIMARY KEY AUTOINCREMENT, firstname TEXT, lastname TEXT, user TEXT,\
-				pass TEXT, email TEXT, picture TEXT);'
+				(id INTEGER PRIMARY KEY AUTOINCREMENT, firstn TEXT, lastn TEXT, user TEXT,\
+				pass TEXT, email TEXT, bio TEXT, picture TEXT, admin TEXT);'
 			await this.db.run(sql)
 			return this
 		})()
@@ -41,10 +59,8 @@ class Accounts {
 	 */
 
 	async initAccounts() {
-		const sql = 'SELECT * FROM users;'
-		const accountsEmpty = await this.db.get(sql)
+		const accountsEmpty = await this.db.get('SELECT * FROM users;')
 		if (accountsEmpty === undefined) {
-			// another async function used so that the same passwords have different bcrypt hashes
 
 			/**
 			 * Encrypts passwords
@@ -55,15 +71,18 @@ class Accounts {
 			 * @returns {String} returns the password that is encrypted into a hash
 			 */
 
+			// another async function used so that the same passwords have different bcrypt hashes
 			async function passEncrypt(pass) {
 				const passw = await bcrypt.hash(pass, saltRounds)
 				return passw
 			}
-			const sqlInsert = `INSERT INTO users(firstname, lastname, user, pass, email, picture)\
-			VALUES 
-			("John", "Smith", "user1", "${await passEncrypt('p455w0rd')}", "user1@gmail.com"),\
-			("Michael", "Brown", "user2", "${await passEncrypt('p455w0rd')}", "user2@gmail.com"),\
-			("Robert", "Davis", "user3", "${await passEncrypt('p455w0rd')}", "user3@gmail.com");`
+			const sqlInsert = `INSERT INTO users(firstn, lastn, user, pass, email, bio, picture, admin)\
+			VALUES("John", "Smith", "user1", "${await passEncrypt('p455w0rd')}", "user1@gmail.com", "Test Account",\
+			"def_pic.png", "true"),\
+			("Michael", "Brown", "user2", "${await passEncrypt('p455w0rd')}", "user2@gmail.com", "Test Account",\
+			"def_pic.png", "false"),\
+			("Ana", "Davis", "user3", "${await passEncrypt('p455w0rd')}", "user3@gmail.com", "Test Account",\
+			"def_pic.png", "false");`
 			console.log('Table empty.')
 			this.db.run(sqlInsert)
 			return true
@@ -72,34 +91,76 @@ class Accounts {
 	}
 
 	/**
-	 * registers a new user
+	 * Selects the current account
+	 *
+	 * @async
+	 * @function
+	 * @param {Number} paramter id from the current user
+	 * @returns {Object} returns all details of current user
+	 */
+
+	async relativeAccounts(id) {
+		const sql = `SELECT users.* FROM users WHERE users.id = ${id};`
+		const accounts = await this.db.get(sql)
+		for(const i in accounts) {
+			if(accounts[i].picture === 'undefined') accounts[i].picture='def_pic.jpg'
+		}
+		return accounts
+	}
+
+	/**
+	 * Selects the reviews assoicated with current user
+	 * @async
+	 * @function
+	 * @param {Number} paramter id from the current user
+	 * @returns {Object} returns all reviews with associated account
+	 */
+
+	// reviews will be returned ordered by descending date
+	async accountReviews(id) {
+		const sql = `SELECT reviews.*, games.game FROM reviews, games\
+									WHERE reviews.userid = ${id} AND games.id = reviews.gamesid;`
+		const accReviews = await this.db.all(sql)
+		return accReviews.reverse()
+	}
+
+	/**
+	 * Registers a new user
 	 *
 	 * @async
 	 * @function register
-	 * @param {String} user the chosen username
-	 * @param {String} pass the chosen password
-	 * @param {String} email the chosen email
+	 * @param {Object} contains all data from register user input
 	 * @returns {Boolean} returns true if the new user has been added
 	 */
 
 	async register(data) {
-		Array.from(arguments).forEach( val => {
+		await missingChecker(data)
+		/*Array.from(arguments).forEach( val => {
 			if(val.length === 0) throw new Error('missing field')
-		})
-		let sql = `SELECT COUNT(id) as records FROM users WHERE user="${data.user}";`
-		const check = await this.db.get(sql)
+		})*/
+		let filename
+		if(data.fileName) {
+			// provides a millisecond timestamp
+			filename = `${Date.now()}.${mime.extension(data.fileType)}`
+			// the file will be copied into the images directory to be used later
+			await fs.copy(data.filePath, `public/images-profile/${filename}`)
+		}
+		// sql variable removed and command was place directly into get function to
+		// prevent linter warnings/errors
+		const check = await this.db.get(`SELECT COUNT(id) as records FROM users WHERE user="${data.user}";`)
 		if(check.records !== 0) throw new Error(`username "${data.user}" already in use`)
-		sql = `SELECT COUNT(id) as records FROM users WHERE email="${data.email}";`
-		const emails = await this.db.get(sql)
+		const emails = await this.db.get(`SELECT COUNT(id) as records FROM users WHERE email="${data.email}";`)
 		if(emails.records !== 0) throw new Error(`email address "${data.email}" is already in use`)
 		const pass = await bcrypt.hash(data.pass, saltRounds)
-		sql = `INSERT INTO users(user, pass, email) VALUES("${data.user}", "${pass}", "${data.email}")`
+		const sql = `INSERT INTO users(firstn, lastn, user, pass, email, bio, picture, admin) VALUES\
+		("${data.firstname}", "${data.lastname}", "${data.user}", "${pass}", "${data.email}", "${data.bio}",\
+		"${filename}", "false")`
 		await this.db.run(sql)
 		return true
 	}
 
 	/**
-	 * checks to see if a set of login credentials are valid
+	 * Checks to see if a set of login credentials are valid
 	 *
 	 * @async
 	 * @function login
@@ -122,7 +183,7 @@ class Accounts {
 	}
 
 	/**
-	 * closes the database
+	 * Closes the database
 	 *
 	 * @async
 	 * @function close

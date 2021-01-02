@@ -189,6 +189,10 @@ p, legend {
 	font-size: 1.1vw;
 }
 
+.p_center {
+	text-align: center;
+}
+
 main {
 	color: white;
 	max-width: 70vw;
@@ -211,7 +215,11 @@ main {
 	margin-top: 0;
 }
 
-.main_log_reg {
+.main_addgame_back {
+	width: 30.8%;
+}
+
+.main_log_reg_add {
 	max-width: fit-content;
 }
 
@@ -320,7 +328,7 @@ legend {
 	padding: 0.6vw;
 }
 
-.button_addgame {
+.button_add-edit {
 	background-color: #c10000;
   border: 2px solid #c10000;
   color: white;
@@ -342,7 +350,7 @@ legend {
 	font-weight: bold;
 }
 
-.button_addgame:hover {
+.button_add-edit:hover {
   background-color: red;
 	border: 2px solid red;
   color: white;
@@ -363,6 +371,7 @@ legend {
 	border-radius: 0.3vw;
 	width: 100%;
 	font-weight: bold;
+	width: -webkit-fill-available;
 }
 
 .button:hover {
@@ -385,6 +394,7 @@ legend {
 	transition-duration: 0.4s;
 	border-radius: 0.3vw;
 	font-weight: bold;
+	width: -webkit-fill-available;
 }
 
 .button_file:hover {
@@ -394,7 +404,13 @@ legend {
 }
 
 .bold {
-	font-weight: bold
+	font-weight: bold;
+	color: red;
+}
+
+.bold_white {
+	font-weight: bold;
+	color: white;
 }
 
 .horizontal-scroll {
@@ -442,7 +458,21 @@ legend {
 	grid-column-gap: 24px; /*added*/
 	margin: 1vw;
 	border-top: 1.5px solid white;
+	justify-content: center;
+  align-items: center;
 }
+
+.grid-container_3 {
+	display: grid;
+	grid-template-columns: 1fr repeat(2, 0.15fr);
+	grid-template-rows: 1fr;
+	grid-column-gap: 24px; /*added*/
+	margin: 1vw;
+	border-top: 1.5px solid white;
+	justify-content: center;
+  align-items: center;
+}
+
 
 .div1 { grid-area: 1 / 1 / 2 / 2; }
 .div2 { grid-area: 1 / 2 / 2 / 3;
@@ -502,6 +532,10 @@ textarea {
 	resize: none;
 	width: -webkit-fill-available;
 	font-family: arial;
+}
+
+.textarea_editreview {
+	width: 25vw;
 }
 
 /* turns the border of the textarea red if invalid

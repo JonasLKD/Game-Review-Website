@@ -34,7 +34,8 @@ class Reviews {
 
 			// sql2 is only used for unit testing purposes
 			const sql2 = 'CREATE TABLE IF NOT EXISTS users\
-				(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT, pass TEXT, email TEXT);'
+				(id INTEGER PRIMARY KEY AUTOINCREMENT, firstn TEXT, lastn TEXT, user TEXT,\
+				pass TEXT, email TEXT, bio TEXT, picture TEXT, admin TEXT);'
 
 			// without running sql2, unit testing will throw SQL error
 			await this.db.run(sql1)
@@ -65,6 +66,7 @@ class Reviews {
 	}
 
 	/**
+	 * Registers a mock account
 	 * function strictly only used for unit testing
 	 *
 	 * @async
@@ -73,25 +75,74 @@ class Reviews {
 	 */
 
 	async registerUnitTest() {
-		const sql = 'INSERT INTO users(user, pass, email) VALUES("doej", "password", "doej@gmail.com")'
+		const sql = 'INSERT INTO users(firstn, lastn, user, pass, email, picture, admin) VALUES\
+								("John", "Doe", "doej", "password", "doej@gmail.com", "picture.jpg", "false");'
 		await this.db.run(sql)
 		return true
 	}
 
 	/**
-	 * selects reviews relative to which game is displayed
+	 * Selects reviews relative to which game is displayed
 	 *
 	 * @async
 	 * @function relativeReviews
 	 * @params {Number} paramter ID from ctx.params.id
-	 * @returns {Object} returns specified reviews
+	 * @returns {Object} returns specified reviews along with user
 	 */
 
+	// reviews will be returned ordered by descending date
 	async relativeReviews(id) {
 		const sql = `SELECT reviews.*, users.user FROM reviews, users\
 									WHERE reviews.gamesid = ${id} AND users.id = reviews.userid;`
 		const reviews = await this.db.all(sql)
 		return reviews.reverse()
+	}
+
+	/**
+	 * Selects review that user would like to edit.
+	 *
+	 * @async
+	 * @function chosenReview
+	 * @params {Number} paramter ID from ctx.params.id
+	 * @returns {Object} returns specified review along with game
+	 */
+
+	async chosenReview(id) {
+		const sql = `SELECT reviews.*, games.game FROM reviews, games\
+									WHERE reviews.id = ${id} AND games.id = reviews.gamesid`
+		const review = await this.db.get(sql)
+		return review
+	}
+
+	/**
+	 * Edited review will update the existing one along with updating the date
+	 *
+	 * @async
+	 * @function editReview
+	 * @params {Object} data coming from handlebar in form as an object
+	 */
+
+	async editReview(data) {
+		console.log(data)
+		try{
+			const max10 = 10
+			let today = new Date()
+			let dd = today.getDate()
+			let mm = today.getMonth()+1
+			const yyyy = today.getFullYear()
+			if(dd < max10) dd=`0${dd}`
+			if(mm < max10) mm=`0${mm}`
+			today = `${dd}/${mm}/${yyyy}`
+			/*const dateTime = new Date()
+			const date = `${dateTime.getDate()}/${dateTime.getMonth()+1}/${dateTime.getFullYear()}`*/
+			const sql = `UPDATE reviews SET review = "${data.review}", date = "${today}" WHERE\
+			reviews.id = ${data.reviewid};`
+			console.log(sql)
+			await this.db.run(sql) //doesn't seem to be running at the moment
+		} catch(err) {
+			console.log(err)
+			throw err
+		}
 	}
 
 	/**
@@ -123,7 +174,7 @@ class Reviews {
 	}
 
 	/**
-	 * adds data a review to the database from the detailedreviewIN handlebar
+	 * Adds data a review to the database from the detailedreviewIN handlebar
 	 *
 	 * @async
 	 * @function add
@@ -150,7 +201,7 @@ class Reviews {
 	}
 
 	/**
-	 * closes the database
+	 * Closes the database
 	 *
 	 * @async
 	 * @function close
