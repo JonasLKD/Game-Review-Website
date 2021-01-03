@@ -103,7 +103,7 @@ class Accounts {
 		const sql = `SELECT users.* FROM users WHERE users.id = ${id};`
 		const accounts = await this.db.get(sql)
 		for(const i in accounts) {
-			if(accounts[i].picture === 'undefined') accounts[i].picture='def_pic.jpg'
+			if(accounts[i].picture === 'undefined') accounts[i].picture='def_pic.png'
 		}
 		return accounts
 	}
@@ -119,9 +119,43 @@ class Accounts {
 	// reviews will be returned ordered by descending date
 	async accountReviews(id) {
 		const sql = `SELECT reviews.*, games.game FROM reviews, games\
-									WHERE reviews.userid = ${id} AND games.id = reviews.gamesid;`
+									WHERE reviews.userid = ${id} AND games.id = reviews.gamesid ORDER BY\
+									SUBSTR(date, 7, 10) DESC, SUBSTR(Date, 4, 5) DESC, SUBSTR(Date, 1, 2) DESC,\
+									id DESC;`
 		const accReviews = await this.db.all(sql)
-		return accReviews.reverse()
+		return accReviews
+	}
+
+	/**
+	 * Edited profile will update the existing one along with updating the date
+	 *
+	 * @async
+	 * @function editAccount
+	 * @params {Object} data coming from handlebar in form as an object
+	 */
+
+	async editAccount(data) {
+		console.log(data)
+		try{
+			let filename
+			// checks if fileName is included, if so filename will be generated for the picture
+			if(data.fileName) {
+				// provides a millisecond timestamp
+				filename = `${Date.now()}.${mime.extension(data.fileType)}`
+				// the file will be copied into the images directory to be used later
+				await fs.copy(data.filePath, `public/images-profile/${filename}`)
+				const sql = `UPDATE users SET firstn = "${data.firstn}", lastn = "${data.lastn}",\
+				picture = "${filename}", bio = "${data.bio}" WHERE users.id = ${data.account};`
+				await this.db.run(sql)
+			}
+			// if not the picture will not be updated as the user could have a picture already
+			const sql = `UPDATE users SET firstn = "${data.firstn}", lastn = "${data.lastn}",\
+			bio = "${data.bio}" WHERE users.id = ${data.account};`
+			await this.db.run(sql)
+		} catch(err) {
+			console.log(err)
+			throw err
+		}
 	}
 
 	/**
@@ -135,9 +169,6 @@ class Accounts {
 
 	async register(data) {
 		await missingChecker(data)
-		/*Array.from(arguments).forEach( val => {
-			if(val.length === 0) throw new Error('missing field')
-		})*/
 		let filename
 		if(data.fileName) {
 			// provides a millisecond timestamp
@@ -145,6 +176,7 @@ class Accounts {
 			// the file will be copied into the images directory to be used later
 			await fs.copy(data.filePath, `public/images-profile/${filename}`)
 		}
+		if(!filename) filename='def_pic.png'
 		// sql variable removed and command was place directly into get function to
 		// prevent linter warnings/errors
 		const check = await this.db.get(`SELECT COUNT(id) as records FROM users WHERE user="${data.user}";`)
@@ -153,7 +185,7 @@ class Accounts {
 		if(emails.records !== 0) throw new Error(`email address "${data.email}" is already in use`)
 		const pass = await bcrypt.hash(data.pass, saltRounds)
 		const sql = `INSERT INTO users(firstn, lastn, user, pass, email, bio, picture, admin) VALUES\
-		("${data.firstname}", "${data.lastname}", "${data.user}", "${pass}", "${data.email}", "${data.bio}",\
+		("${data.firstn}", "${data.lastn}", "${data.user}", "${pass}", "${data.email}", "${data.bio}",\
 		"${filename}", "false")`
 		await this.db.run(sql)
 		return true

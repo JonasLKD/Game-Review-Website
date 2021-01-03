@@ -64,3 +64,19 @@ window.addEventListener('DOMContentLoaded', () => {
 		}, false)
 	}
 })
+
+window.onload = function() {
+	//Reference the DropDownList.
+	const ddlYears = document.getElementById('ddlYears')
+
+	//Determine the Current Year.
+	const currentYear = new Date().getFullYear()
+
+	//Loop and add the Year values to DropDownList.
+	for (let i = 1940; i <= currentYear; i++) {
+		const option = document.createElement('OPTION')
+		option.innerHTML = i
+		option.value = i
+		ddlYears.appendChild(option)
+	}
+}

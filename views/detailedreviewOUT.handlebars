@@ -17,6 +17,7 @@
 			{{#if authorised}}
 			<a href="/logout">Log out</a>
 			<p><span class="bold">Welcome, </span>{{user}}</p>
+			<a class="profile_small" href="/gamereviews/profile"><img class="profile_img_header" src="/images-profile/{{userpic}}" /></a>
 			{{else}}
 			<a href="/login">Log in</a>
 			{{/if}}
@@ -46,11 +47,17 @@
 			{{#each reviewtag}}
 			<div class="grid-container_2">
 				<div class="div1">
-					<p><span class="bold">{{this.user}}</span></p>
-					<p>{{this.review}}</p>
+					<img src="{{host}}/images-profile/{{this.picture}}" />
 				</div>
 				<div class="div2_2">
+					<p><span class="bold">{{this.firstn}}</span> <span class="bold">{{this.lastn}}</span></p>
+					<p>{{this.review}}</p>
+				</div>
+				<div class="div3">
 					<p><span class="bold">{{this.date}}</span></p>
+				</div>
+				<div class="div4">
+					<a class="button">Flag</a>
 				</div>
 			</div>
 			{{/each}}

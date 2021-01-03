@@ -24,12 +24,12 @@
 		<main class="main_log_reg_add">
 		<form action="/register" enctype="multipart/form-data" method="post">
 			<p>
-				<label class="bold_white" for="firstname">Firstname</label><br />
-				<input type="text" name="firstname" placeholder="e.g. John" value="{{body.firstname}}" pattern="[A-Za-z']+" data-msg="Please enter your firstname" autofocus required />
+				<label class="bold_white" for="firstn">Firstname</label><br />
+				<input type="text" name="firstn" placeholder="e.g. John" value="{{body.firstname}}" pattern="[A-Za-z']+" data-msg="Please enter your firstname" autofocus required />
 			</p>
 			<p>
-				<label class="bold_white" for="lastname">Lastname</label><br />
-				<input type="text" name="lastname" placeholder="e.g. Doe" value="{{body.lastname}}" data-msg="Please enter your lastname" required />
+				<label class="bold_white" for="lastn">Lastname</label><br />
+				<input type="text" name="lastn" placeholder="e.g. Doe" value="{{body.lastname}}" data-msg="Please enter your lastname" required />
 			</p>
 			<p>
 				<label class="bold_white" for="user">Username</label><br />
@@ -53,7 +53,9 @@
 			</p>
 			<p><input type="submit" value="Register"></p>
 		</form>
-			<p><a href="/">Home page</a></p>
+		</main>
+		<main class="main_addgame_back">
+			<a class="button_back" href="/login">Back</a>
 		</main>
 		<footer>
 			<p>Made by Jonas Djondo</p>

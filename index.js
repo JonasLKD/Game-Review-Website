@@ -19,6 +19,7 @@ async function getHandlebarData(ctx, next) {
 		// pulls values
 		user: ctx.session.user,
 		userid: ctx.session.userid,
+		userpic: ctx.session.userpic, // added to user's picture
 		gamesid: ctx.session.gamesid, // added to store gamesid
 		reviewid: ctx.session.reviewid, // added to store reviewid
 		host: `https://${ctx.host}`

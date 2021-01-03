@@ -1,0 +1,52 @@
+
+<!doctype html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Editing {{infoEdit.user}}'s Account</title>
+		<meta name="description" content="form to add new books">
+		<meta name="author" content="Mark Tyers">
+		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+		<script type="module" src="main.js"></script>
+	</head>
+	<body>
+		<header>
+			<a class="logo" href="/"><img class="logo_img" src="/logo.png" /></a>
+			<h1>Edit Account</h1>
+			<a href="/logout">Log out</a>
+		</header>
+		{{#if msg}}
+ 			<aside>
+				<p class="msg">{{msg}}</p>
+			</aside>
+		{{/if}}
+		<main class="main_log_reg_add">
+		<form action="/gamereviews/editprofile" enctype="multipart/form-data" method="post">
+			<p>
+				<label class="bold_white" for="firstn">Firstname</label><br />
+				<input type="text" name="firstn" value="{{infoEdit.firstn}}" pattern="[A-Za-z']+" data-msg="Please enter your firstname" autofocus required />
+			</p>
+			<p>
+				<label class="bold_white" for="lastn">Lastname</label><br />
+				<input type="text" name="lastn" value="{{infoEdit.lastn}}" data-msg="Please enter your lastname" required />
+			</p>
+			<p>
+				<label class="bold_white" for="avatar">Profile Picture</label><br />
+				<input type="file" name="avatar" accept="image/*" class="button_file" />
+			</p>
+			<p>
+				<label class="bold_white" for="bio">Bio</label><br />
+				<textarea name="bio" data-msg="Please enter a bio" required>{{infoEdit.bio}}</textarea>
+			</p>
+			<p class="p_center"><input type="submit" value="Edit Account"></p>
+		</form>
+		</main>
+		<main class=main_addgame_back>
+			<a class="button_back" href="/gamereviews/profile">Back</a>
+		</main>
+		<footer>
+			<p>Made by Jonas Djondo</p>
+		</footer>
+	</body>
+</html>

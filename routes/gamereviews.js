@@ -58,22 +58,21 @@ router.get('/', async ctx => {
 })
 
 /**
- * The profile page
+ * The user profile page
  *
  * @name Profile Page
  * @route {GET} /profile
  */
 
 router.get('/profile', async ctx => {
-	// created accounts and reviews object
-	const accounts = await new Accounts(dbName)
-	// const reviews = await new Reviews(dbName)
+	// created accounts object
+	const account = await new Accounts(dbName)
 	try {
 		ctx.request.body.account = ctx.session.userid
 		// retrieves account info
-		const accountInfo = await accounts.relativeAccounts(ctx.session.userid)
+		const accountInfo = await account.relativeAccounts(ctx.session.userid)
 		// retrieves all reviews of current user
-		const accReviews = await accounts.accountReviews(ctx.session.userid)
+		const accReviews = await account.accountReviews(ctx.session.userid)
 		// info property added and will be passed onto the profile handlebar
 		ctx.hbs.info = accountInfo
 		ctx.hbs.accRev = accReviews
@@ -83,6 +82,53 @@ router.get('/profile', async ctx => {
 		await ctx.render('profile', ctx.hbs)
 	} catch(err) {
 		ctx.render('error', ctx.hbs)
+	}
+})
+
+/**
+ * The user edit profile page
+ *
+ * @name Edit Profile Page
+ * @route {GET} /editprofile
+ */
+
+router.get('/editprofile', async ctx => {
+	// created accounts object
+	const account = await new Accounts(dbName)
+	try {
+		const accountInfoEdit = await account.relativeAccounts(ctx.session.userid)
+		ctx.hbs.infoEdit = accountInfoEdit
+		console.log(accountInfoEdit)
+		await ctx.render('editprofile', ctx.hbs)
+	} catch(err) {
+		ctx.render('error', ctx.hbs)
+	}
+})
+
+/**
+ * The script to process editing a profile/account
+ *
+ * @name Edit a Profile Script
+ * @route {POST} /editprofile
+ */
+
+router.post('/editprofile', async ctx => {
+	const account = await new Accounts(dbName)
+	try {
+		ctx.request.body.account = ctx.session.userid
+		if(ctx.request.files.avatar.name) {
+			ctx.request.body.filePath = ctx.request.files.avatar.path
+			ctx.request.body.fileName = ctx.request.files.avatar.name
+			ctx.request.body.fileType = ctx.request.files.avatar.type
+		}
+		await account.editAccount(ctx.request.body)
+		const userpics = await account.relativeAccounts(ctx.session.userid)
+		ctx.session.userpic = userpics.picture
+		ctx.request.body.userpic = ctx.session.userpic
+		return ctx.redirect('/gamereviews/profile?msg=Profile edited')
+	} catch(err) {
+		console.log(err)
+		await ctx.render('error', ctx.hbs)
 	}
 })
 
@@ -98,7 +144,7 @@ router.get('/editreview/:id', async ctx => {
 		const selectedReview = await reviews.chosenReview(ctx.params.id)
 		ctx.hbs.selectedReview = selectedReview
 		console.log(selectedReview)
-		ctx.session.reviewid = selectedReview.gamesid
+		ctx.session.reviewid = selectedReview.id
 		await ctx.render('editreview', ctx.hbs)
 		return ctx.session.reviewid
 	} catch(err) {
@@ -115,16 +161,16 @@ router.get('/editreview/:id', async ctx => {
  */
 
 router.post('/editreview/:id', async ctx => {
+	const reviews = await new Reviews(dbName)
 	try {
 		ctx.request.body.reviewid = ctx.session.reviewid
-		const reviews = await new Reviews(dbName)
 		await reviews.editReview(ctx.request.body)
+		delete ctx.session.reviewid // deletes cookie after use
 		return ctx.redirect('/gamereviews/profile?msg=Review edited')
 	} catch(err) {
 		console.log(err)
 		await ctx.render('error', ctx.hbs)
 	}
-
 })
 
 /**
@@ -179,8 +225,8 @@ router.post('/reviewdetails/:id', async ctx => {
 		// calls the add function from reviews.js
 		await reviews.add(ctx.request.body)
 		// displays a message saying a new review was added
-		console.log('adding a review to database')
-		return ctx.redirect('/gamereviews?msg=New review added')
+		delete ctx.session.gamesid // deletes cookie after use
+		return ctx.redirect('/gamereviews/:id?msg=New review added')
 	} catch(err) {
 		console.log(err)
 		await ctx.render('error', ctx.hbs)
@@ -217,9 +263,7 @@ router.post('/addgame', async ctx => {
 			ctx.request.body.fileName = ctx.request.files.thumbnail.name
 			ctx.request.body.fileType = ctx.request.files.thumbnail.type
 		}
-		console.log(ctx.request.body)
 		await games.add(ctx.request.body)
-		console.log('adding a game to database')
 		// user is redirected to gamesreviews page with message popup
 		return ctx.redirect('/gamereviews?msg=New game added')
 	} catch(err) {
@@ -228,7 +272,6 @@ router.post('/addgame', async ctx => {
 	} finally {
 		games.close()
 	}
-
 })
 
 export default router

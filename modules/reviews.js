@@ -29,6 +29,7 @@ class Reviews {
 				gamesid INTEGER,\
 				review TEXT NOT NULL,\
 				date TEXT NOT NULL,\
+				flags INTEGER DEFAULT 0,\
 				FOREIGN KEY(userid) REFERENCES users(id)\
 				FOREIGN KEY(gamesid) REFERENCES games(id));'
 
@@ -92,10 +93,12 @@ class Reviews {
 
 	// reviews will be returned ordered by descending date
 	async relativeReviews(id) {
-		const sql = `SELECT reviews.*, users.user FROM reviews, users\
-									WHERE reviews.gamesid = ${id} AND users.id = reviews.userid;`
+		const sql = `SELECT reviews.*, users.* FROM reviews, users\
+									WHERE reviews.gamesid = ${id} AND users.id = reviews.userid ORDER BY\
+									SUBSTR(date, 7, 10) DESC, SUBSTR(date, 4, 5) DESC, SUBSTR(date, 1, 2) DESC,\
+									id DESC;`
 		const reviews = await this.db.all(sql)
-		return reviews.reverse()
+		return reviews
 	}
 
 	/**
@@ -133,12 +136,10 @@ class Reviews {
 			if(dd < max10) dd=`0${dd}`
 			if(mm < max10) mm=`0${mm}`
 			today = `${dd}/${mm}/${yyyy}`
-			/*const dateTime = new Date()
-			const date = `${dateTime.getDate()}/${dateTime.getMonth()+1}/${dateTime.getFullYear()}`*/
 			const sql = `UPDATE reviews SET review = "${data.review}", date = "${today}" WHERE\
 			reviews.id = ${data.reviewid};`
 			console.log(sql)
-			await this.db.run(sql) //doesn't seem to be running at the moment
+			await this.db.run(sql)
 		} catch(err) {
 			console.log(err)
 			throw err
@@ -186,11 +187,16 @@ class Reviews {
 		console.log('ADD', data)
 		try {
 			// getting current date with review
-			const dateTime = new Date()
-			const date = `${dateTime.getDate()}/${dateTime.getMonth()+1}/${dateTime.getFullYear()}`
+			const max10 = 10
+			const today = new Date()
+			let dd = today.getDate()
+			let mm = today.getMonth()+1
+			const yyyy = today.getFullYear()
+			if(dd < max10) dd=`0${dd}`
+			if(mm < max10) mm=`0${mm}`
 			// data from form inserted into database
 			const sql = `INSERT INTO reviews(userid, gamesid, review, date)\
-									VALUES(${data.account}, ${data.gamesid}, "${data.review}", "${date}")`
+			VALUES(${data.account}, ${data.gamesid}, "${data.review}", "${dd}/${mm}/${yyyy}")`
 			console.log(sql)
 			await this.db.run(sql)
 			return true

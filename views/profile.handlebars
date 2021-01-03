@@ -16,6 +16,7 @@
 			<h1>{{info.user}}'s Profile</h1>
 			<a href="/logout">Log out</a>
 			<p><span class="bold">Welcome, </span>{{user}}</p>
+			<a class="profile_small" href="/gamereviews/profile"><img class="profile_img_header" src="/images-profile/{{userpic}}" /></a>
 		</header>
 		{{#if msg}}
  			<aside>
@@ -25,7 +26,7 @@
 		<main>
 			<div class="grid-container">
 			<div class="div1">
-				<img src="{{host}}/images-profile/{{info.picture}}" />
+				<img src="{{host}}/images-profile/{{info.picture}}" class="profile_img" />
 			</div>
 			<div class="div2">
 				<h2>{{info.user}}</h2>
@@ -41,7 +42,7 @@
 				<br>
 				<br>
 				<br>
-				<a class="button" href="/gamereviews/edit">Edit</a>
+				<a class="button" href="/gamereviews/editprofile">Edit</a>
 			</div>
 		</div>
 		</main>
@@ -63,7 +64,7 @@
 			{{/each}}
 		</main>
 		<main>
-			<button class="back button">Back</button>
+			<a class="button_back" href="/gamereviews">Back</a>
 		</main>
 		<footer>
 			<p>Made by Jonas Djondo</p>

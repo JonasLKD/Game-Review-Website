@@ -85,10 +85,10 @@ router.get('/register', async ctx => await ctx.render('register'))
 router.post('/register', async ctx => {
 	const account = await new Accounts(dbName)
 	try {
-		if(ctx.request.files.thumbnail.name) {
-			ctx.request.body.filePath = ctx.request.files.thumbnail.path
-			ctx.request.body.fileName = ctx.request.files.thumbnail.name
-			ctx.request.body.fileType = ctx.request.files.thumbnail.type
+		if(ctx.request.files.avatar.name) {
+			ctx.request.body.filePath = ctx.request.files.avatar.path
+			ctx.request.body.fileName = ctx.request.files.avatar.name
+			ctx.request.body.fileType = ctx.request.files.avatar.type
 		}
 		// call the register function from account.js
 		await account.register(ctx.request.body) //edited
@@ -128,13 +128,15 @@ router.post('/login', async ctx => {
 	const account = await new Accounts(dbName)
 	ctx.hbs.body = ctx.request.body
 	try {
-		const body = ctx.request.body
-		const id = await account.login(body.user, body.pass)
+		const id = await account.login(ctx.request.body.user, ctx.request.body.pass)
 		ctx.session.authorised = true
-		// created a cookie storing the user's id
-		ctx.session.user = body.user
+		// created a cookie storing the user's name, id and picture
+		ctx.session.user = ctx.request.body.user
 		ctx.session.userid = id
-		const referrer = body.referrer || '/gamereviews'
+		const userpics = await account.relativeAccounts(id)
+		ctx.session.userpic = userpics.picture
+		ctx.request.body.userpic = ctx.session.userpic
+		const referrer = ctx.request.body.referrer || '/gamereviews'
 		return ctx.redirect(`${referrer}?msg=You are now logged in...`)
 	} catch(err) {
 		ctx.hbs.msg = err.message
@@ -156,6 +158,9 @@ router.get('/logout', async ctx => {
 	ctx.session.authorised = null
 	delete ctx.session.user
 	delete ctx.session.userid
+	delete ctx.session.userpic
+	delete ctx.session.gamesid
+	delete ctx.session.reviewid
 	ctx.redirect('/?msg=You are now logged out')
 })
 
