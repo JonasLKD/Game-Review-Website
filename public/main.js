@@ -65,9 +65,30 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
 })
 
+// admin accounts need to see the flagged review
+const divs = document.getElementsByClassName('big')
+const paras = document.getElementsByClassName('small')
+const checks = document.getElementsByClassName('check')
+// if no admin an exception would be brought up to running second code
+try{
+	const check = checks[0].innerHTML.trim()
+	if(check === '[ADMIN]') {
+		console.log('Hello Boss')
+	}
+} catch(err) {
+	// hides the flagged review
+	for(let x = 0; x < divs.length; x++) {
+		const div = divs[x]
+		const para = paras[x]
+		const content = para.innerHTML.trim()
+
+		if(content === 'Flags: 2') div.style.display = 'none'
+	}
+}
+
 window.onload = function() {
 	//Reference the DropDownList.
-	const ddlYears = document.getElementById('ddlYears')
+	const ddlYears = document.getElementById('yearGen')
 
 	//Determine the Current Year.
 	const currentYear = new Date().getFullYear()

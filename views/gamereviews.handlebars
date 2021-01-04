@@ -15,7 +15,11 @@
 			<a class="logo" href="/gamereviews"><img class="logo_img" src="/logo.png" /></a>
 			<h1>Game Reviews</h1>
 			<a href="/logout">Log out</a>
+			{{#if admin}}
+			<p><span class="bold">Welcome, </span>{{user}} <span class="bold">[ADMIN]</span></p>
+			{{else}}
 			<p><span class="bold">Welcome, </span>{{user}}</p>
+			{{/if}}
 			<a class="profile_small" href="/gamereviews/profile"><img class="profile_img_header" src="/images-profile/{{userpic}}" /></a>
 		</header>
 		{{#if msg}}

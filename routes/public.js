@@ -128,14 +128,15 @@ router.post('/login', async ctx => {
 	const account = await new Accounts(dbName)
 	ctx.hbs.body = ctx.request.body
 	try {
-		const id = await account.login(ctx.request.body.user, ctx.request.body.pass)
+		const record = await account.login(ctx.request.body.user, ctx.request.body.pass)
 		ctx.session.authorised = true
+		ctx.session.admin = await account.adminCheck(record.admin)
 		// created a cookie storing the user's name, id and picture
 		ctx.session.user = ctx.request.body.user
-		ctx.session.userid = id
-		const userpics = await account.relativeAccounts(id)
+		ctx.session.userid = record.id
+		const userpics = await account.relativeAccounts(record.id)
 		ctx.session.userpic = userpics.picture
-		ctx.request.body.userpic = ctx.session.userpic
+		// ctx.request.body.userpic = ctx.session.userpic
 		const referrer = ctx.request.body.referrer || '/gamereviews'
 		return ctx.redirect(`${referrer}?msg=You are now logged in...`)
 	} catch(err) {
@@ -153,10 +154,11 @@ router.post('/login', async ctx => {
  * @route {GET} /logout
  */
 
-// route to log out the user
+// route to log out the user and deletes all cookies
 router.get('/logout', async ctx => {
 	ctx.session.authorised = null
 	delete ctx.session.user
+	delete ctx.session.admin
 	delete ctx.session.userid
 	delete ctx.session.userpic
 	delete ctx.session.gamesid

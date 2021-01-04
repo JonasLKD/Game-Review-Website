@@ -16,8 +16,8 @@ test('REGISTER : register and log in with a valid account', async test => {
 			picture: 'picture.jpg',
 			admin: 'false'})
 	  const login = await account.login('doej', 'password')
-		// login function returns a record.id that is number datatype
-		test.is(typeof login, 'number', 'unable to log in')
+		// login function returns a record that is object datatype to be used later on
+		test.is(typeof login, 'object', 'unable to log in')
 	} catch(err) {
 		console.log(err)
 		test.fail('error thrown')

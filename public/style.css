@@ -136,7 +136,7 @@ h3 {
 h5, h6 {
 	margin: 1vw;
 	font-size: 1.5vw;
-	color: black; /*added*/
+	color: black;
 }
 
 header > a {
@@ -508,7 +508,7 @@ legend {
 	display: grid;
 	grid-template-columns: 0.7fr 1fr 0.7fr;
 	grid-template-rows: 1fr;
-	grid-column-gap: 24px; /*added*/
+	grid-column-gap: 24px;
 }
 
 .grid-container_2 {
@@ -518,7 +518,6 @@ legend {
 	grid-template-rows: 1fr;
 	grid-column-gap: 24px;
 	margin: 1vw;
-	/*border-top: 1.5px solid white;*/
 	justify-content: center;
   align-items: center;
 }
@@ -527,9 +526,20 @@ legend {
 	display: grid;
 	grid-template-columns: 1fr repeat(2, 0.15fr);
 	grid-template-rows: 1fr;
-	grid-column-gap: 24px; /*added*/
+	grid-column-gap: 24px;
 	margin: 1vw;
-	border-top: 1.5px solid white;
+	/*border-top: 1.5px solid white;*/
+	justify-content: center;
+  align-items: center;
+}
+
+.grid-container_4 {
+	display: grid;
+	/*grid-template-columns: 1fr 0.15fr;*/
+	grid-template-columns: 0.15fr 1fr 0.15fr;
+	grid-template-rows: 1fr;
+	grid-column-gap: 24px;
+	margin: 1vw;
 	justify-content: center;
   align-items: center;
 }

@@ -15,7 +15,11 @@
 			<a class="logo" href="/gamereviews"><img class="logo_img" src="/logo.png" /></a>
 			<h1>Games Review</h1>
 			<a href="/logout">Log out</a>
+			{{#if admin}}
+			<p><span class="bold">Welcome, </span>{{user}} <span class="bold check">[ADMIN]</span></p>
+			{{else}}
 			<p><span class="bold">Welcome, </span>{{user}}</p>
+			{{/if}}
 			<a class="profile_small" href="/gamereviews/profile"><img class="profile_img_header" src="/images-profile/{{userpic}}" /></a>
 		</header>
 		{{#if msg}}
@@ -23,21 +27,21 @@
 				<p class="msg">{{msg}}</p>
 			</aside>
 		{{/if}}
-	<main>
-		<div class="grid-container">
-			<div class="div1">
-				<img src="{{host}}/images-game/{{game.thumbnail}}" />
+		<main>
+			<div class="grid-container">
+				<div class="div1">
+					<img src="{{host}}/images-game/{{game.thumbnail}}" />
+				</div>
+				<div class="div2">
+					<h2>{{game.game}}</h2>
+					<p class="pText"><span class="bold">Summary:</span> <span>{{game.summary}}</span></p>
+				</div>
+				<div class="div3">
+					<p><span class="bold">Publisher:</span> <span>{{game.publisher}}</span></p> 
+					<p><span class="bold">Release Year:</span> <span>{{game.release_year}}</span></p>
+				</div>
 			</div>
-			<div class="div2">
-				<h2>{{game.game}}</h2>
-				<p class="pText"><span class="bold">Summary:</span> <span>{{game.summary}}</span></p>
-			</div>
-			<div class="div3">
-				<p><span class="bold">Publisher:</span> <span>{{game.publisher}}</span></p> 
-				<p><span class="bold">Release Year:</span> <span>{{game.release_year}}</span></p>
-			</div>
-		</div>
-	</main>	
+		</main>	
 		<main class="main_reviewbox">
 			<form method="post" action="/gamereviews/reviewdetails/:id" enctype="multipart/form-data">
 				<p>
@@ -50,7 +54,8 @@
 		<main>
 			<h3>Reviews</h3>
 			{{#each reviewtag}}
-			<div class="grid-container_2">
+			{{#if admin}}
+			<div class="grid-container_2 big">
 				<div class="div1">
 					<img src="{{host}}/images-profile/{{this.picture}}" />
 				</div>
@@ -59,12 +64,41 @@
 					<p>{{this.review}}</p>
 				</div>
 				<div class="div3">
-					<p><span class="bold">{{this.date}}</span></p>
+					<p class="p_center"><span class="bold">{{this.date}}</span></p>
+					<p class="p_center"><span class="bold_white small">Flags: {{this.flags}}</span></p>
+					<form method="post" action="/gamereviews/approve/{{this.id}}" enctype="multipart/form-data">
+						<p><input type="submit" class="flag button" value="Flag"></p>
+					</form>
+					<form method="post" action="/gamereviews/delete/{{this.id}}" enctype="multipart/form-data">
+						<p><input type="submit" class="flag button" value="Flag"></p>
+					</form>
 				</div>
 				<div class="div4">
-					<a class="button">Flag</a>
+					<form method="post" action="/gamereviews/flag/{{this.id}}" enctype="multipart/form-data">
+						<p><input type="submit" class="flag button" value="Flag"></p>
+					</form>
 				</div>
 			</div>
+			{{else}}
+			<div class="grid-container_2 big">
+				<div class="div1">
+					<img src="{{host}}/images-profile/{{this.picture}}" />
+				</div>
+				<div class="div2_2">
+					<p><span class="bold">{{this.firstn}}</span> <span class="bold">{{this.lastn}}</span></p>
+					<p>{{this.review}}</p>
+				</div>
+				<div class="div3">
+					<p class="p_center"><span class="bold">{{this.date}}</span></p>
+					<p class="p_center"><span class="bold_white small">Flags: {{this.flags}}</span></p>
+				</div>
+				<div class="div4">
+					<form method="post" action="/gamereviews/flag/{{this.id}}" enctype="multipart/form-data">
+						<p><input type="submit" class="flag button" value="Flag"></p>
+					</form>
+				</div>
+			</div>
+			{{/if}}
 			{{/each}}
 		</main>
 		<main>

@@ -206,12 +206,28 @@ class Accounts {
 		const records = await this.db.get(sql)
 		if(!records.count) throw new Error(`username "${username}" not found`)
 		// retrieves the id and password
-		sql = `SELECT id, pass FROM users WHERE user = "${username}";`
+		sql = `SELECT id, pass, admin FROM users WHERE user = "${username}";`
 		const record = await this.db.get(sql)
 		const valid = await bcrypt.compare(password, record.pass)
 		if(valid === false) throw new Error(`invalid password for account "${username}"`)
-		// returns the id from the record
-		return record.id
+		// returns the record of logged in user
+		return record
+	}
+
+	/**
+	 * Checks to see if current user is an admin account
+	 *
+	 * @async
+	 * @function adminCheck
+	 * @param {String} recieves admin status of account
+	 * @returns {Boolean} returns true or false depending whether admin or not
+	 */
+
+	async adminCheck(data) {
+		if(data === 'true') {
+			return true
+		}
+		return false
 	}
 
 	/**

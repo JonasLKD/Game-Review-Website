@@ -24,8 +24,8 @@ const dbName = 'website.db'
 
 // function checks if the current user is logged in
 async function checkAuth(ctx, next) {
-	console.log('secure router middleware')
-	console.log(ctx.hbs)
+	// console.log('secure router middleware')
+	// console.log(ctx.hbs)
 	if(ctx.hbs.authorised !== true) return ctx.redirect('/login?msg=You need to log in&referrer=/gamereviews')
 	await next()
 }
@@ -45,15 +45,14 @@ router.get('/', async ctx => {
 	const games = await new Games(dbName)
 	try {
 		// retrieves all games in the database
-		const records = await games.all()
+		ctx.hbs.records = await games.all()
 		// prints out the records in the terminal
-		console.log(records)
+		// console.log(records)
 		// records property added and will passed onto the gamereview handlebar
-		ctx.hbs.records = records
 		await ctx.render('gamereviews', ctx.hbs)
 	} catch(err) {
-		ctx.hbs.error = err.message
-		await ctx.render('error', ctx.hbs)
+		// ctx.hbs.error = err.message
+		// await ctx.render('error', ctx.hbs)
 	}
 })
 
@@ -69,19 +68,13 @@ router.get('/profile', async ctx => {
 	const account = await new Accounts(dbName)
 	try {
 		ctx.request.body.account = ctx.session.userid
-		// retrieves account info
-		const accountInfo = await account.relativeAccounts(ctx.session.userid)
-		// retrieves all reviews of current user
-		const accReviews = await account.accountReviews(ctx.session.userid)
-		// info property added and will be passed onto the profile handlebar
-		ctx.hbs.info = accountInfo
-		ctx.hbs.accRev = accReviews
-		console.log(accountInfo)
-		console.log(accReviews)
-		// console.log(ctx.hbs)
+		// retrieves account info and added to handlebar
+		ctx.hbs.info = await account.relativeAccounts(ctx.session.userid)
+		// retrieves all reviews of current user and added to handlebar
+		ctx.hbs.accRev = await account.accountReviews(ctx.session.userid)
 		await ctx.render('profile', ctx.hbs)
 	} catch(err) {
-		ctx.render('error', ctx.hbs)
+		// await ctx.render('error', ctx.hbs)
 	}
 })
 
@@ -96,12 +89,10 @@ router.get('/editprofile', async ctx => {
 	// created accounts object
 	const account = await new Accounts(dbName)
 	try {
-		const accountInfoEdit = await account.relativeAccounts(ctx.session.userid)
-		ctx.hbs.infoEdit = accountInfoEdit
-		console.log(accountInfoEdit)
+		ctx.hbs.infoEdit = await account.relativeAccounts(ctx.session.userid)
 		await ctx.render('editprofile', ctx.hbs)
 	} catch(err) {
-		ctx.render('error', ctx.hbs)
+		// await ctx.render('error', ctx.hbs)
 	}
 })
 
@@ -116,6 +107,7 @@ router.post('/editprofile', async ctx => {
 	const account = await new Accounts(dbName)
 	try {
 		ctx.request.body.account = ctx.session.userid
+		// filepath, name and type is needed to create mime extension
 		if(ctx.request.files.avatar.name) {
 			ctx.request.body.filePath = ctx.request.files.avatar.path
 			ctx.request.body.fileName = ctx.request.files.avatar.name
@@ -124,10 +116,10 @@ router.post('/editprofile', async ctx => {
 		await account.editAccount(ctx.request.body)
 		const userpics = await account.relativeAccounts(ctx.session.userid)
 		ctx.session.userpic = userpics.picture
-		ctx.request.body.userpic = ctx.session.userpic
+		//ctx.request.body.userpic = ctx.session.userpic
 		return ctx.redirect('/gamereviews/profile?msg=Profile edited')
 	} catch(err) {
-		console.log(err)
+		// console.log(err)
 		await ctx.render('error', ctx.hbs)
 	}
 })
@@ -141,14 +133,12 @@ router.post('/editprofile', async ctx => {
 router.get('/editreview/:id', async ctx => {
 	const reviews = await new Reviews(dbName)
 	try {
-		const selectedReview = await reviews.chosenReview(ctx.params.id)
-		ctx.hbs.selectedReview = selectedReview
-		console.log(selectedReview)
-		ctx.session.reviewid = selectedReview.id
+		ctx.hbs.selectedReview = await reviews.chosenReview(ctx.params.id)
+		ctx.session.reviewid = ctx.hbs.selectedReview.id
 		await ctx.render('editreview', ctx.hbs)
 		return ctx.session.reviewid
 	} catch(err) {
-		console.log(err)
+		// console.log(err)
 		await ctx.render('error', ctx.hbs)
 	}
 })
@@ -165,10 +155,9 @@ router.post('/editreview/:id', async ctx => {
 	try {
 		ctx.request.body.reviewid = ctx.session.reviewid
 		await reviews.editReview(ctx.request.body)
-		delete ctx.session.reviewid // deletes cookie after use
 		return ctx.redirect('/gamereviews/profile?msg=Review edited')
 	} catch(err) {
-		console.log(err)
+		// console.log(err)
 		await ctx.render('error', ctx.hbs)
 	}
 })
@@ -187,21 +176,18 @@ router.get('/reviewdetails/:id', async ctx => {
 	try {
 		ctx.request.body.account = ctx.session.userid
 		// declares a reviewtag to display specific reviews related to the game
-		const reviewtag = await reviews.relativeReviews(ctx.params.id)
-		ctx.hbs.reviewtag = reviewtag
-		console.log(`record: ${ctx.params.id}`)
-		const gamedata = await games.getByIDGames(ctx.params.id)
-		ctx.hbs.game = gamedata
+		ctx.hbs.reviewtag = await reviews.relativeReviews(ctx.params.id)
+		// console.log(`record: ${ctx.params.id}`)
+		ctx.hbs.game = await games.getByIDGames(ctx.params.id)
 		// declares the gamesid cookie which will be used in the post function
-		ctx.session.gamesid = gamedata.id
-		console.log(ctx.hbs)
-		// ctx.hbs.id = ctx.params.id
+		ctx.session.gamesid = ctx.hbs.game.id
 		// function checks if current user has already reviewed this game
-		await ctx.render(await reviews.reviewChecker(reviewtag, ctx.session.userid), ctx.hbs)
+		// console.log(ctx.hbs)
+		await ctx.render(await reviews.reviewChecker(ctx.hbs.reviewtag, ctx.session.userid, ctx.session.admin), ctx.hbs)
 		// returns the current gamesid cookie
 		return ctx.session.gamesid
 	} catch(err) {
-		console.log(err)
+		// console.log(err)
 		await ctx.render('error', ctx.hbs)
 	}
 })
@@ -225,11 +211,69 @@ router.post('/reviewdetails/:id', async ctx => {
 		// calls the add function from reviews.js
 		await reviews.add(ctx.request.body)
 		// displays a message saying a new review was added
-		delete ctx.session.gamesid // deletes cookie after use
-		return ctx.redirect('/gamereviews/:id?msg=New review added')
+		return ctx.redirect('/gamereviews?msg=New review added')
 	} catch(err) {
-		console.log(err)
+		// console.log(err)
 		await ctx.render('error', ctx.hbs)
+	} finally {
+		reviews.close()
+	}
+})
+
+/**
+ * The script to process a flag on a review
+ *
+ * @name Flag Script
+ * @route {POST} /flag/:id
+ */
+
+//flags need to be updated when flag button is clicked
+router.post('/flag/:id', async ctx => {
+	const reviews = await new Reviews(dbName)
+	const games = await new Games(dbName)
+	try {
+		await reviews.flagger(ctx.params.id)
+		// checks if the review has hit the flags limit
+		await games.emailSend(ctx.params.id)
+		return ctx.redirect('/gamereviews?msg=Review flagged')
+	} finally {
+		reviews.close()
+	}
+})
+
+/**
+ * The script to process a approve on a review
+ *
+ * @name Flag Script
+ * @route {POST} /approve/:id
+ */
+
+// admins can post this route by clicking the approve button resetting all flags
+// and setting hidden to false
+router.post('/approve/:id', async ctx => {
+	const reviews = await new Reviews(dbName)
+	try {
+		await reviews.approve(ctx.params.id)
+		return ctx.redirect('/gamereviews?msg=Review approved')
+	}	finally {
+		reviews.close()
+	}
+})
+
+/**
+ * The script to process a delete a review
+ *
+ * @name Flag Script
+ * @route {POST} /delete/:id
+ */
+
+// if admins decide to delete a review the delete button will activate this
+// route for deletion
+router.post('/delete/:id', async ctx => {
+	const reviews = await new Reviews(dbName)
+	try {
+		await reviews.delete(ctx.params.id)
+		return ctx.redirect('/gamereviews?msg=Review deleted')
 	} finally {
 		reviews.close()
 	}
@@ -267,7 +311,7 @@ router.post('/addgame', async ctx => {
 		// user is redirected to gamesreviews page with message popup
 		return ctx.redirect('/gamereviews?msg=New game added')
 	} catch(err) {
-		console.log(err)
+		// console.log(err)
 		await ctx.render('error', ctx.hbs)
 	} finally {
 		games.close()

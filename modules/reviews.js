@@ -23,14 +23,14 @@ class Reviews {
 		return (async() => {
 			this.db = await sqlite.open(dbName)
 			// this table will be used to store the game reviews
-			const sql1 = 'CREATE TABLE IF NOT EXISTS reviews(\
-				id INTEGER PRIMARY KEY AUTOINCREMENT,\
+			const sql1 = 'CREATE TABLE IF NOT EXISTS reviews(id INTEGER PRIMARY KEY AUTOINCREMENT,\
 				userid INTEGER,\
 				gamesid INTEGER,\
 				review TEXT NOT NULL,\
 				date TEXT NOT NULL,\
 				flags INTEGER DEFAULT 0,\
-				FOREIGN KEY(userid) REFERENCES users(id)\
+				hidden TEXT DEFAULT "false",\
+				FOREIGN KEY(userid) REFERENCES users(id),\
 				FOREIGN KEY(gamesid) REFERENCES games(id));'
 
 			// sql2 is only used for unit testing purposes
@@ -93,11 +93,16 @@ class Reviews {
 
 	// reviews will be returned ordered by descending date
 	async relativeReviews(id) {
-		const sql = `SELECT reviews.*, users.* FROM reviews, users\
+		const sql = `SELECT reviews.*, users.firstn, users.lastn, users.picture FROM reviews, users\
 									WHERE reviews.gamesid = ${id} AND users.id = reviews.userid ORDER BY\
 									SUBSTR(date, 7, 10) DESC, SUBSTR(date, 4, 5) DESC, SUBSTR(date, 1, 2) DESC,\
 									id DESC;`
 		const reviews = await this.db.all(sql)
+		for(const i in reviews) {
+			if(reviews[i].hidden === 'true') reviews[i].hidden=true
+			console.log(reviews[i])
+		}
+		console.log('reviews above')
 		return reviews
 	}
 
@@ -128,14 +133,17 @@ class Reviews {
 	async editReview(data) {
 		console.log(data)
 		try{
+			// prevents magic numebrs
 			const max10 = 10
 			let today = new Date()
 			let dd = today.getDate()
 			let mm = today.getMonth()+1
 			const yyyy = today.getFullYear()
+			// dates need to be formatted as 01/01/2021
 			if(dd < max10) dd=`0${dd}`
 			if(mm < max10) mm=`0${mm}`
 			today = `${dd}/${mm}/${yyyy}`
+			// updates the review
 			const sql = `UPDATE reviews SET review = "${data.review}", date = "${today}" WHERE\
 			reviews.id = ${data.reviewid};`
 			console.log(sql)
@@ -144,6 +152,53 @@ class Reviews {
 			console.log(err)
 			throw err
 		}
+	}
+
+	/**
+	 * Updates the flag count for a review
+	 *
+	 * @async
+	 * @function flagger
+	 * @params {Object} data coming from handlebar in form as an object
+	 */
+
+	async flagger(id) {
+		const flagMax = 2
+		const sqlCheck = `SELECT flags FROM reviews WHERE id=${id};`
+		const check = await this.db.get(sqlCheck)
+		// need to check if the flags is bigger than 2
+		if(check.flags >= flagMax) {
+			await this.db.run(`UPDATE reviews SET hidden="true" WHERE id=${id};`)
+			return
+		} else {
+			const sql = `UPDATE reviews SET flags = flags + 1 WHERE id=${id};`
+			console.log(sql)
+			await this.db.run(sql)
+		}
+	}
+
+	/**
+	 * Updates the flagged review, resets the flags and sets hidden to false
+	 *
+	 * @async
+	 * @function approve
+	 * @params {Object} data coming from handlebar in form as an object
+	 */
+
+	async approve(id) {
+		await this.db.run(`UPDATE reviews SET flags = 0, hidden='false' WHERE id=${id};`)
+	}
+
+	/**
+	 * Deletes the flagged review
+	 *
+	 * @async
+	 * @function delete
+	 * @params {Object} data coming from handlebar in form as an object
+	 */
+
+	async delete(id) {
+		await this.db.run(`DELETE FROM reviews WHERE id=${id}`)
 	}
 
 	/**
@@ -156,22 +211,23 @@ class Reviews {
 	 * @returns {String} returns the handlebar name as a string
 	 */
 
-	async reviewChecker(reviewtag, currentUser) {
+	async reviewChecker(reviewtag, currentUser, admin) {
 		if (reviewtag.length === 0) {
 			console.log('Empty')
 			return 'detailedreviewIN'
-		} else {
-			for(const i in reviewtag) {
-				// console.log(reviewtag[i].userid, currentUser)
-				if(reviewtag[i].userid === currentUser) {
-					console.log('Already reviewed')
-					return 'detailedreviewOUT'
-				} else {
-					console.log('not reviewed')
-				}
-			}
-			return 'detailedreviewIN'
 		}
+		for(const i in reviewtag) {
+			if(reviewtag[i].userid === currentUser) {
+				console.log('Already reviewed')
+				if(admin === true) {
+					return 'detailedreviewOUT_admin'
+				}
+				return 'detailedreviewOUT'
+			} else {
+				console.log('not reviewed')
+			}
+		}
+		return 'detailedreviewIN'
 	}
 
 	/**

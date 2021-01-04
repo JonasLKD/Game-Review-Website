@@ -7,6 +7,38 @@ import sqlite from 'sqlite-async'
 import mime from 'mime-types'
 // using fs to allow copying files to directories and reading text files
 import fs from 'fs-extra'
+// using nodemailer as the emailing service
+import nodemailer from 'nodemailer'
+
+/**
+ * Split function for emailSend
+ *
+ *
+ * @function splitFunction
+ * @params {Object} parameter checker stores ctx.params.id from the emailSend function
+ * @params {Object} parameter linkGen stores the gamesid from the emailSend
+ */
+
+function splitFunction(checker, linkGen) {
+	try {
+		// entire processing for emailing
+		const transporter = nodemailer.createTransport({
+			service: 'gmail', auth: {user: 'georgerob485@gmail.com', pass: 'burgerface387'}})
+		const mailDetails = {from: 'georgerob485@gmail.com', to: 'georgerob485@gmail.com',
+			subject: 'Flagged Review', text: `Hey Admin, here is a flagged \
+review link: https://djondoj-sem1.herokuapp.com/gamereviews/reviewdetails/${linkGen.gamesid}\
+ Note: Log in first.`}
+		transporter.sendMail(mailDetails, (error, info) => {
+			if (error) {
+				// console.log(error)
+			} else {
+				console.log(`Email sent: ${info.response}`)
+			}
+		})
+	} catch(err) {
+		console.log(err)
+	}
+}
 
 /**
  * Games
@@ -48,6 +80,7 @@ class Games {
 	 * @returns {Boolean} returns true if sql command is read successfully
 	 */
 
+	// database needs to initialised for heroku
 	async initGames() {
 		const sql = 'SELECT * FROM games;'
 		const gamesEmpty = await this.db.get(sql)
@@ -84,13 +117,28 @@ class Games {
 	}
 
 	/**
-	 * Retrieves specified game which is determined by the parameter ID
+	 * Sends email to the admin when reviews reach amount of flags
 	 *
 	 * @async
-	 * @function getByIDGames
+	 * @function emailSend
 	 * @param {Number} parameter ID from ctx.params.id
 	 * @returns {Object} returns specified game
 	 */
+
+	async emailSend(checker) {
+		try {
+			// prevents magic numbers
+			const flagMax = 2
+			const check = await this.db.get(`SELECT flags FROM reviews WHERE id=${checker};`)
+			const linkGen = await this.db.get(`SELECT gamesid FROM reviews WHERE id=${checker}`)
+			// need to check if the flags is bigger than 2
+			if(check.flags >= flagMax) {
+				await splitFunction(checker, linkGen)
+			}
+		} catch (err) {
+			//console.log(err)
+		}
+	}
 
 	// retrieves specified game which is determined by the parameter ID
 	async getByIDGames(id) {
@@ -126,7 +174,7 @@ class Games {
 			filename = `${Date.now()}.${mime.extension(data.fileType)}`
 			console.log(filename)
 			// the file will be copied into the images directory to be used later
-			await fs.copy(data.filePath, `public/images-games/${filename}`)
+			await fs.copy(data.filePath, `public/images-game/${filename}`)
 		}
 		try {
 			// data from form inserted into database
