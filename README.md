@@ -6,8 +6,6 @@ Build a community website to review games (you can choose what type). All the ga
 
 ## Links to Heroku Live Server and Personal GitHub (Git Actions & Auto Deployment)
 **Note:** Please allow a couple of seconds for the Heroku site to start up as the database is cleared everyday or so.
-1. **Heroku:** https://djondoj-sem1.herokuapp.com/
-2. **Personal** GitHub: https://github.com/github-actions-project/djondoj-sem1-website 
 
 ---
 
