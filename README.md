@@ -4,11 +4,6 @@ Build a community website to review games (you can choose what type). All the ga
 
 ---
 
-## Links to Heroku Live Server and Personal GitHub (Git Actions & Auto Deployment)
-**Note:** Please allow a couple of seconds for the Heroku site to start up as the database is cleared everyday or so.
-
----
-
 ## Testing Accounts
 **Note:** All accounts with username `user[x]` the same password - `p455w0rd`. All accounts have 3 reviews already so another will be have to be registered to make a new review on a game. Their usernames will be listed below:
 1. `user1`
